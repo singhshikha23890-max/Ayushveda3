@@ -345,15 +345,15 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
                 <h3 className="font-serif text-2xl font-bold text-slate-900">
-                  à¤‘à¤°à¥à¤¡à¤° à¤¸à¤«à¤²à¤¤à¤¾à¤ªà¥‚à¤°à¥à¤µà¤• à¤¦à¤°à¥à¤œ à¤¹à¥‹ à¤—à¤¯à¤¾!
+                  ऑर्डर सफलतापूर्वक दर्ज हो गया!
                 </h3>
                 <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-600 space-y-1 text-left max-w-sm mx-auto">
-                  <p><strong>à¤¨à¤¾à¤®:</strong> {formData.name}</p>
-                  <p><strong>à¤¨à¤‚à¤¬à¤°:</strong> +91 {formData.phone.slice(-10)} <span className="text-emerald-600 font-bold ml-1">âœ“ Real SMS OTP Verified</span></p>
-                  <p><strong>à¤ªà¤¤à¤¾:</strong> {formData.address}, {formData.pincode}</p>
+                  <p><strong>नाम:</strong> {formData.name}</p>
+                  <p><strong>नंबर:</strong> +91 {formData.phone.slice(-10)} <span className="text-emerald-600 font-bold ml-1">✓ Real SMS OTP Verified</span></p>
+                  <p><strong>पता:</strong> {formData.address}, {formData.pincode}</p>
                 </div>
                 <p className="text-xs text-slate-600">
-                  à¤¹à¤®à¤¾à¤°à¥€ à¤Ÿà¥€à¤® à¤œà¤²à¥à¤¦ à¤¹à¥€ à¤†à¤ªà¤•à¥€ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤•à¥€ à¤ªà¥à¤·à¥à¤Ÿà¤¿ à¤•à¥‡ à¤²à¤¿à¤ à¤¸à¤‚à¤ªà¤°à¥à¤• à¤•à¤°à¥‡à¤—à¥€à¥¤
+                  हमारी टीम जल्द ही आपकी डिलीवरी की पुष्टि के लिए संपर्क करेगी।
                 </p>
                 <button
                   onClick={handleReset}

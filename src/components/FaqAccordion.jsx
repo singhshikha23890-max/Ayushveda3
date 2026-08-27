@@ -24,10 +24,10 @@ const faqs = [
   },
 ];
 
-export const FaqAccordion: React.FC = () => {
-  const [openIdx, setOpenIdx] = useState<number | null>(0);
+export const FaqAccordion = () => {
+  const [openIdx, setOpenIdx] = useState(0);
 
-  const toggle = (idx: number) => {
+  const toggle = (idx) => {
     setOpenIdx(openIdx === idx ? null : idx);
   };
 

@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { ShoppingCart, Zap, RefreshCw, ShieldCheck, Truck, CreditCard, Award, CheckCircle2 } from 'lucide-react';
 
 const galleryImages = [
@@ -20,7 +20,7 @@ const galleryImages = [
   {
     url: '/banners/banner2.jpg',
     alt: 'Ayurvedic Doctor Endorsement',
-    tag: 'Dr. à¤•à¤¾ à¤­à¤°à¥‹à¤¸à¤¾',
+    tag: 'Dr. का भरोसा',
   },
   {
     url: '/banners/banner3.jpg',
