@@ -1,0 +1,257 @@
+import React, { useState } from 'react';
+import { CheckCircle2, ShoppingBag, KeyRound, ArrowLeft } from 'lucide-react';
+
+export const OrderForm: React.FC = () => {
+  const [step, setStep] = useState<'form' | 'otp' | 'success'>('form');
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    age: '',
+    address: '',
+    pincode: '',
+  });
+
+  const [generatedOtp, setGeneratedOtp] = useState('1234');
+  const [otpInput, setOtpInput] = useState('');
+  const [otpError, setOtpError] = useState('');
+
+  const handleSendOrder = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (formData.name && formData.phone && formData.address) {
+      const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
+      setGeneratedOtp(newOtp);
+      setOtpInput('');
+      setOtpError('');
+      setStep('otp');
+    }
+  };
+
+  const handleVerifyOtp = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (otpInput === generatedOtp || otpInput === '1234') {
+      setStep('success');
+    } else {
+      setOtpError('गलत OTP दर्ज किया गया है! कृपया पुनः प्रयास करें।');
+    }
+  };
+
+  const handleAutoFill = () => {
+    setOtpInput(generatedOtp);
+    setOtpError('');
+  };
+
+  const handleReset = () => {
+    setStep('form');
+    setFormData({ name: '', phone: '', age: '', address: '', pincode: '' });
+    setOtpInput('');
+    setOtpError('');
+  };
+
+  return (
+    <section id="order-form-section" className="py-16 bg-[#f8f9fa] border-b border-slate-200 scroll-mt-6">
+      <div className="max-w-xl mx-auto px-4 sm:px-6">
+        
+        <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xl relative">
+          
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="w-12 h-12 rounded-full bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-3">
+              {step === 'otp' ? <KeyRound className="w-6 h-6" /> : <ShoppingBag className="w-6 h-6" />}
+            </div>
+            <h2 className="font-serif text-2xl sm:text-3xl font-extrabold text-slate-900">
+              {step === 'otp' ? 'OTP सत्यापन (OTP Verification)' : 'कैश ऑन डिलीवरी ऑर्डर फॉर्म'}
+            </h2>
+            <p className="text-xs text-slate-500 mt-1">
+              {step === 'otp'
+                ? `आपके मोबाइल नंबर +91 ${formData.phone} पर OTP भेजा गया है`
+                : 'नीचे दी गई जानकारी भरें और अपना ऑर्डर दर्ज करें'}
+            </p>
+          </div>
+
+          {step === 'form' && (
+            <form onSubmit={handleSendOrder} className="space-y-4">
+              
+              {/* Name */}
+              <div>
+                <label className="block text-xs font-bold text-slate-900 mb-1">
+                  पूरा नाम (Full Name)
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="अपना पूरा नाम दर्ज करें"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
+                />
+              </div>
+
+              {/* Number */}
+              <div>
+                <label className="block text-xs font-bold text-slate-900 mb-1">
+                  मोबाइल नंबर (Phone Number)
+                </label>
+                <input
+                  type="tel"
+                  required
+                  maxLength={10}
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  placeholder="अपना 10 अंकों का नंबर दर्ज करें"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
+                />
+              </div>
+
+              {/* Age */}
+              <div>
+                <label className="block text-xs font-bold text-slate-900 mb-1">
+                  उम्र (Age)
+                </label>
+                <input
+                  type="number"
+                  required
+                  min="18"
+                  max="99"
+                  value={formData.age}
+                  onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                  placeholder="अपनी उम्र दर्ज करें"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
+                />
+              </div>
+
+              {/* Address */}
+              <div>
+                <label className="block text-xs font-bold text-slate-900 mb-1">
+                  पूरा पता (Address)
+                </label>
+                <textarea
+                  rows={3}
+                  required
+                  value={formData.address}
+                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  placeholder="मकान नंबर, गली/गाँव, शहर, जिला, राज्य"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
+                />
+              </div>
+
+              {/* Pincode */}
+              <div>
+                <label className="block text-xs font-bold text-slate-900 mb-1">
+                  पिन कोड (PIN Code)
+                </label>
+                <input
+                  type="text"
+                  required
+                  maxLength={6}
+                  value={formData.pincode}
+                  onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
+                  placeholder="6 अंकों का PIN code"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
+                />
+              </div>
+
+              {/* Red Send Button */}
+              <div className="pt-4">
+                <button
+                  type="submit"
+                  className="w-full bg-[#cc0000] hover:bg-red-700 text-white font-black text-lg py-4 rounded-2xl shadow-xl transition-all uppercase tracking-wider"
+                >
+                  SEND ORDER
+                </button>
+              </div>
+
+            </form>
+          )}
+
+          {step === 'otp' && (
+            <form onSubmit={handleVerifyOtp} className="space-y-5">
+              
+              {/* Simulated OTP Notification Banner */}
+              <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-center">
+                <p className="text-xs text-emerald-800 font-medium">
+                  सत्यापन कोड (Demo OTP): <strong className="text-emerald-950 text-base ml-1">{generatedOtp}</strong>
+                </p>
+                <button
+                  type="button"
+                  onClick={handleAutoFill}
+                  className="mt-2 text-xs font-bold text-emerald-700 underline hover:text-emerald-900"
+                >
+                  [ Auto-fill OTP ]
+                </button>
+              </div>
+
+              {/* OTP Input */}
+              <div>
+                <label className="block text-xs font-bold text-slate-900 mb-1.5 text-center">
+                  4 अंकों का OTP दर्ज करें (Enter 4-Digit OTP)
+                </label>
+                <input
+                  type="text"
+                  required
+                  maxLength={4}
+                  value={otpInput}
+                  onChange={(e) => {
+                    setOtpInput(e.target.value);
+                    setOtpError('');
+                  }}
+                  placeholder="••••"
+                  className="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-300 text-center font-bold text-2xl tracking-[0.5em] text-slate-900 placeholder-slate-300 focus:outline-none focus:border-red-600 bg-slate-50"
+                />
+                {otpError && (
+                  <p className="text-xs font-bold text-red-600 text-center mt-2">{otpError}</p>
+                )}
+              </div>
+
+              {/* Buttons */}
+              <div className="space-y-3 pt-2">
+                <button
+                  type="submit"
+                  className="w-full bg-[#cc0000] hover:bg-red-700 text-white font-black text-base py-4 rounded-2xl shadow-xl transition-all"
+                >
+                  वेरीफाई और ऑर्डर कन्फर्म करें (Verify & Confirm)
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setStep('form')}
+                  className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 py-2"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>फॉर्म वापस बदलें (Edit Form / Phone)</span>
+                </button>
+              </div>
+
+            </form>
+          )}
+
+          {step === 'success' && (
+            <div className="text-center py-10 space-y-4">
+              <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center mx-auto shadow">
+                <CheckCircle2 className="w-10 h-10" />
+              </div>
+              <h3 className="font-serif text-2xl font-bold text-slate-900">
+                ऑर्डर सफलतापूर्वक दर्ज हो गया!
+              </h3>
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-600 space-y-1 text-left max-w-sm mx-auto">
+                <p><strong>नाम:</strong> {formData.name}</p>
+                <p><strong>नंबर:</strong> +91 {formData.phone} <span className="text-emerald-600 font-bold ml-1">✓ Verified</span></p>
+                <p><strong>पता:</strong> {formData.address}, {formData.pincode}</p>
+              </div>
+              <p className="text-xs text-slate-600">
+                हमारी टीम जल्द ही आपकी डिलीवरी की पुष्टि के लिए संपर्क करेगी।
+              </p>
+              <button
+                onClick={handleReset}
+                className="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-6 py-2.5 rounded-full"
+              >
+                नया ऑर्डर दर्ज करें
+              </button>
+            </div>
+          )}
+
+        </div>
+
+      </div>
+    </section>
+  );
+};
