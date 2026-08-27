@@ -58,7 +58,19 @@ export const OrderForm: React.FC = () => {
           window.recaptchaVerifier = undefined;
         } catch (e) {}
       }
-      setSendError('SMS OTP भेजने में समस्या आई। कृपया अपना 10 अंकों का सही मोबाइल नंबर दर्ज करें।');
+
+      let errorMsg = 'SMS OTP भेजने में समस्या आई।';
+      if (err?.code === 'auth/quota-exceeded') {
+        errorMsg = 'Firebase Daily SMS Quota (10 SMS/day) पूरा हो गया है! Firebase Console में Test Phone Number जोड़ें या Billing ऑन करें।';
+      } else if (err?.code === 'auth/invalid-app-credential') {
+        errorMsg = 'Firebase App Credential त्रुटि (App Check / Domain verification failed).';
+      } else if (err?.code === 'auth/too-many-requests') {
+        errorMsg = 'इस मोबाइल नंबर पर अत्यधिक प्रयास किए गए हैं। कृपया थोड़ी देर बाद प्रयास करें।';
+      } else if (err?.message) {
+        errorMsg = `Firebase त्रुटि (${err.code || 'error'}): ${err.message}`;
+      }
+
+      setSendError(errorMsg);
     } finally {
       setLoading(false);
     }
