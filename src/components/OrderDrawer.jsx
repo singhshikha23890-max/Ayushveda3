@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { X, CheckCircle2, ShoppingBag, ShieldCheck, Truck, KeyRound, ArrowLeft, Loader2 } from 'lucide-react';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { auth } from '../firebase';
@@ -27,7 +27,7 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
 
     const cleanPhone = formData.phone.trim().replace(/\D/g, '');
     if (cleanPhone.length < 10) {
-      setSendError('à¤•à¥ƒà¤ªà¤¯à¤¾ à¤¸à¤¹à¥€ 10 à¤…à¤‚à¤•à¥‹à¤‚ à¤•à¤¾ à¤®à¥‹à¤¬à¤¾à¤‡à¤² à¤¨à¤‚à¤¬à¤° à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚à¥¤');
+      setSendError('कृपया सही 10 अंकों का मोबाइल नंबर दर्ज करें।');
       return;
     }
 
@@ -46,7 +46,7 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
       const result = await signInWithPhoneNumber(auth, formattedPhone, window.recaptchaVerifier);
       setConfirmationResult(result);
       setStep('otp');
-    } catch (err: any) {
+    } catch (err) {
       console.error("Firebase Phone Auth error:", err);
       if (window.recaptchaVerifier) {
         try {
@@ -55,15 +55,15 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
         } catch (e) {}
       }
 
-      let errorMsg = 'SMS OTP à¤­à¥‡à¤œà¤¨à¥‡ à¤®à¥‡à¤‚ à¤¸à¤®à¤¸à¥à¤¯à¤¾ à¤†à¤ˆà¥¤';
+      let errorMsg = 'SMS OTP भेजने में समस्या आई।';
       if (err?.code === 'auth/quota-exceeded') {
-        errorMsg = 'Firebase Daily SMS Quota (10 SMS/day) à¤ªà¥‚à¤°à¤¾ à¤¹à¥‹ à¤—à¤¯à¤¾ à¤¹à¥ˆ! Firebase Console à¤®à¥‡à¤‚ Test Phone Number à¤œà¥‹à¤¡à¤¼à¥‡à¤‚ à¤¯à¤¾ Billing à¤‘à¤¨ à¤•à¤°à¥‡à¤‚à¥¤';
+        errorMsg = 'Firebase Daily SMS Quota (10 SMS/day) पूरा हो गया है! Firebase Console में Test Phone Number जोड़ें या Billing ऑन करें।';
       } else if (err?.code === 'auth/invalid-app-credential') {
-        errorMsg = 'Firebase App Credential à¤¤à¥à¤°à¥à¤Ÿà¤¿ (App Check / Domain verification failed).';
+        errorMsg = 'Firebase App Credential त्रुटि (App Check / Domain verification failed).';
       } else if (err?.code === 'auth/too-many-requests') {
-        errorMsg = 'à¤‡à¤¸ à¤®à¥‹à¤¬à¤¾à¤‡à¤² à¤¨à¤‚à¤¬à¤° à¤ªà¤° à¤…à¤¤à¥à¤¯à¤§à¤¿à¤• à¤ªà¥à¤°à¤¯à¤¾à¤¸ à¤•à¤¿à¤ à¤—à¤ à¤¹à¥ˆà¤‚à¥¤ à¤•à¥ƒà¤ªà¤¯à¤¾ à¤¥à¥‹à¤¡à¤¼à¥€ à¤¦à¥‡à¤° à¤¬à¤¾à¤¦ à¤ªà¥à¤°à¤¯à¤¾à¤¸ à¤•à¤°à¥‡à¤‚à¥¤';
+        errorMsg = 'इस मोबाइल नंबर पर अत्यधिक प्रयास किए गए हैं। कृपया थोड़ी देर बाद प्रयास करें।';
       } else if (err?.message) {
-        errorMsg = `Firebase à¤¤à¥à¤°à¥à¤Ÿà¤¿ (${err.code || 'error'}): ${err.message}`;
+        errorMsg = `Firebase error (${err.code || 'error'}): ${err.message}`;
       }
 
       setSendError(errorMsg);
@@ -75,7 +75,7 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
   const handleVerifyOtp = async (e) => {
     e.preventDefault();
     if (!otpInput || otpInput.trim().length < 6) {
-      setOtpError('à¤•à¥ƒà¤ªà¤¯à¤¾ à¤†à¤ªà¤•à¥‡ à¤®à¥‹à¤¬à¤¾à¤‡à¤² à¤ªà¤° à¤ªà¥à¤°à¤¾à¤ªà¥à¤¤ 6 à¤…à¤‚à¤•à¥‹à¤‚ à¤•à¤¾ SMS OTP à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚à¥¤');
+      setOtpError('कृपया आपके मोबाइल पर प्राप्त 6 अंकों का SMS OTP दर्ज करें।');
       return;
     }
 
@@ -87,11 +87,11 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
         await confirmationResult.confirm(otpInput.trim());
         setStep('success');
       } else {
-        setOtpError('à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¨ à¤¸à¤¤à¥à¤° à¤¸à¤®à¤¾à¤ªà¥à¤¤ à¤¹à¥‹ à¤—à¤¯à¤¾ à¤¹à¥ˆà¥¤ à¤•à¥ƒà¤ªà¤¯à¤¾ à¤ªà¥à¤¨à¤ƒ à¤ªà¥à¤°à¤¯à¤¾à¤¸ à¤•à¤°à¥‡à¤‚à¥¤');
+        setOtpError('सत्यापन सत्र समाप्त हो गया है। कृपया पुनः प्रयास करें।');
       }
     } catch (err) {
       console.error("OTP verification error:", err);
-      setOtpError('à¤—à¤²à¤¤ OTP! à¤•à¥ƒà¤ªà¤¯à¤¾ à¤†à¤ªà¤•à¥‡ à¤®à¥‹à¤¬à¤¾à¤‡à¤² à¤ªà¤° à¤ªà¥à¤°à¤¾à¤ªà¥à¤¤ 6 à¤…à¤‚à¤•à¥‹à¤‚ à¤•à¤¾ SMS OTP à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚à¥¤');
+      setOtpError('गलत OTP! कृपया आपके मोबाइल पर प्राप्त 6 अंकों का SMS OTP दर्ज करें।');
     } finally {
       setLoading(false);
     }
@@ -125,7 +125,7 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
             <div className="flex items-center gap-2">
               {step === 'otp' ? <KeyRound className="w-5 h-5 text-amber-400" /> : <ShoppingBag className="w-5 h-5 text-amber-400" />}
               <h3 className="font-serif text-lg font-bold text-white">
-                {step === 'otp' ? 'OTP à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¨' : 'à¤•à¥ˆà¤¶ à¤‘à¤¨ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤‘à¤°à¥à¤¡à¤° à¤«à¥‰à¤°à¥à¤®'}
+                {step === 'otp' ? 'OTP सत्यापन' : 'कैश ऑन डिलीवरी ऑर्डर फॉर्म'}
               </h3>
             </div>
             <button
@@ -150,8 +150,8 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
                 <h4 className="font-extrabold text-sm text-slate-900">Horse Fire Tablets</h4>
                 <p className="text-xs text-slate-500">60 Tablets (1 Month Course)</p>
                 <div className="flex items-baseline gap-2 mt-1">
-                  <span className="font-bold text-red-600 text-base">â‚¹1,499</span>
-                  <span className="text-xs text-slate-400 line-through">â‚¹3,000</span>
+                  <span className="font-bold text-red-600 text-base">₹1,499</span>
+                  <span className="text-xs text-slate-400 line-through">₹3,000</span>
                 </div>
               </div>
             </div>
@@ -159,20 +159,20 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
             {step === 'form' && (
               <form onSubmit={handleSendOrder} className="space-y-4">
                 <h4 className="font-bold text-sm text-slate-900 border-b border-slate-100 pb-2">
-                  à¤…à¤ªà¤¨à¥€ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤œà¤¾à¤¨à¤•à¤¾à¤°à¥€ à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚:
+                  अपनी डिलीवरी जानकारी दर्ज करें:
                 </h4>
 
                 {/* Name */}
                 <div>
                   <label className="block text-xs font-bold text-slate-900 mb-1">
-                    à¤ªà¥‚à¤°à¤¾ à¤¨à¤¾à¤® (Full Name)
+                    पूरा नाम (Full Name)
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="à¤…à¤ªà¤¨à¤¾ à¤ªà¥‚à¤°à¤¾ à¤¨à¤¾à¤® à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚"
+                    placeholder="अपना पूरा नाम दर्ज करें"
                     className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
                   />
                 </div>
@@ -180,11 +180,11 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
                 {/* Number */}
                 <div>
                   <label className="block text-xs font-bold text-slate-900 mb-1">
-                    à¤®à¥‹à¤¬à¤¾à¤‡à¤² à¤¨à¤‚à¤¬à¤° (Phone Number)
+                    मोबाइल नंबर (Phone Number)
                   </label>
                   <div className="flex items-center gap-2">
                     <div className="flex items-center gap-1.5 px-3 py-3 rounded-xl border border-slate-300 bg-slate-100 text-slate-800 text-sm font-bold shrink-0 select-none shadow-sm">
-                      <span className="text-base">ðŸ‡®ðŸ‡³</span>
+                      <span className="text-base">🇮🇳</span>
                       <span>+91</span>
                     </div>
                     <input
@@ -197,7 +197,7 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
                         setFormData({ ...formData, phone: val });
                         setSendError('');
                       }}
-                      placeholder="10 à¤…à¤‚à¤•à¥‹à¤‚ à¤•à¤¾ à¤¨à¤‚à¤¬à¤° à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚"
+                      placeholder="10 अंकों का नंबर दर्ज करें"
                       className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
                     />
                   </div>
@@ -206,7 +206,7 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
                 {/* Age */}
                 <div>
                   <label className="block text-xs font-bold text-slate-900 mb-1">
-                    à¤‰à¤®à¥à¤° (Age)
+                    उम्र (Age)
                   </label>
                   <input
                     type="number"
@@ -215,7 +215,7 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
                     max="99"
                     value={formData.age}
                     onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-                    placeholder="à¤…à¤ªà¤¨à¥€ à¤‰à¤®à¥à¤° à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚"
+                    placeholder="अपनी उम्र दर्ज करें"
                     className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
                   />
                 </div>
@@ -223,14 +223,14 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
                 {/* Address */}
                 <div>
                   <label className="block text-xs font-bold text-slate-900 mb-1">
-                    à¤ªà¥‚à¤°à¤¾ à¤ªà¤¤à¤¾ (Address)
+                    पूरा पता (Address)
                   </label>
                   <textarea
                     rows={3}
                     required
                     value={formData.address}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    placeholder="à¤®à¤•à¤¾à¤¨ à¤¨à¤‚à¤¬à¤°, à¤—à¤²à¥€/à¤—à¤¾à¤à¤µ, à¤¶à¤¹à¤°, à¤°à¤¾à¤œà¥à¤¯"
+                    placeholder="मकान नंबर, गली/गाँव, शहर, राज्य"
                     className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
                   />
                 </div>
@@ -238,7 +238,7 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
                 {/* Pincode */}
                 <div>
                   <label className="block text-xs font-bold text-slate-900 mb-1">
-                    à¤ªà¤¿à¤¨ à¤•à¥‹à¤¡ (PIN Code)
+                    पिन कोड (PIN Code)
                   </label>
                   <input
                     type="text"
@@ -246,7 +246,7 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
                     maxLength={6}
                     value={formData.pincode}
                     onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
-                    placeholder="6 à¤…à¤‚à¤•à¥‹à¤‚ à¤•à¤¾ PIN code"
+                    placeholder="6 अंकों का PIN code"
                     className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
                   />
                 </div>
@@ -265,7 +265,7 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
                     {loading ? (
                       <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        <span>OTP à¤­à¥‡à¤œà¤¾ à¤œà¤¾ à¤°à¤¹à¤¾ à¤¹à¥ˆ...</span>
+                        <span>OTP भेजा जा रहा है...</span>
                       </>
                     ) : (
                       <span>SEND ORDER</span>
@@ -282,7 +282,7 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
                 {/* OTP Input */}
                 <div>
                   <label className="block text-xs font-bold text-slate-900 mb-1.5 text-center">
-                    6 à¤…à¤‚à¤•à¥‹à¤‚ à¤•à¤¾ SMS OTP à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚ (Enter 6-Digit SMS OTP)
+                    6 अंकों का SMS OTP दर्ज करें (Enter 6-Digit SMS OTP)
                   </label>
                   <input
                     type="text"
@@ -293,7 +293,7 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
                       setOtpInput(e.target.value);
                       setOtpError('');
                     }}
-                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢"
+                    placeholder="••••••"
                     className="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-300 text-center font-bold text-2xl tracking-[0.4em] text-slate-900 placeholder-slate-300 focus:outline-none focus:border-red-600 bg-slate-50"
                   />
                   {otpError && (
@@ -311,10 +311,10 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
                     {loading ? (
                       <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        <span>à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¿à¤¤ à¤•à¤¿à¤¯à¤¾ à¤œà¤¾ à¤°à¤¹à¤¾ à¤¹à¥ˆ...</span>
+                        <span>सत्यापित किया जा रहा है...</span>
                       </>
                     ) : (
-                      <span>à¤µà¥‡à¤°à¥€à¤«à¤¾à¤ˆ à¤”à¤° à¤‘à¤°à¥à¤¡à¤° à¤•à¤¨à¥à¤«à¤°à¥à¤® à¤•à¤°à¥‡à¤‚ (Verify & Confirm)</span>
+                      <span>वेरीफाई और ऑर्डर कन्फर्म करें (Verify & Confirm)</span>
                     )}
                   </button>
 
@@ -324,7 +324,7 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
                     className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 py-2"
                   >
                     <ArrowLeft className="w-4 h-4" />
-                    <span>à¤«à¥‰à¤°à¥à¤® à¤µà¤¾à¤ªà¤¸ à¤¬à¤¦à¤²à¥‡à¤‚ (Edit Form / Phone)</span>
+                    <span>फॉर्म वापस बदलें (Edit Form / Phone)</span>
                   </button>
                 </div>
 
