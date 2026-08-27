@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { X, CheckCircle2, ShoppingBag, ShieldCheck, Truck, KeyRound, ArrowLeft } from 'lucide-react';
+import { X, CheckCircle2, ShoppingBag, ShieldCheck, Truck, KeyRound, ArrowLeft, Loader2 } from 'lucide-react';
+import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from 'firebase/auth';
+import { auth } from '../firebase';
 
 interface OrderDrawerProps {
   isOpen: boolean;
@@ -16,35 +18,76 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
     pincode: '',
   });
 
-  const [generatedOtp, setGeneratedOtp] = useState('1234');
+  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
   const [otpInput, setOtpInput] = useState('');
   const [otpError, setOtpError] = useState('');
+  const [sendError, setSendError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSendOrder = (e: React.FormEvent) => {
+  const handleSendOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.name && formData.phone && formData.address) {
-      const newOtp = Math.floor(1000 + Math.random() * 9000).toString();
-      setGeneratedOtp(newOtp);
-      setOtpInput('');
-      setOtpError('');
-      setStep('otp');
-    }
-  };
+    if (!formData.name || !formData.phone || !formData.address) return;
 
-  const handleVerifyOtp = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (otpInput === generatedOtp || otpInput === '1234') {
-      setStep('success');
-    } else {
-      setOtpError('गलत OTP दर्ज किया गया है! कृपया पुनः प्रयास करें।');
+    const cleanPhone = formData.phone.trim().replace(/\D/g, '');
+    if (cleanPhone.length < 10) {
+      setSendError('कृपया सही 10 अंकों का मोबाइल नंबर दर्ज करें।');
+      return;
     }
-  };
 
-  const handleAutoFill = () => {
-    setOtpInput(generatedOtp);
+    setLoading(true);
+    setSendError('');
     setOtpError('');
+
+    try {
+      if (!window.recaptchaVerifier) {
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container-drawer', {
+          size: 'invisible',
+        });
+      }
+
+      const formattedPhone = cleanPhone.startsWith('91') && cleanPhone.length === 12 ? `+${cleanPhone}` : `+91${cleanPhone.slice(-10)}`;
+      const result = await signInWithPhoneNumber(auth, formattedPhone, window.recaptchaVerifier);
+      setConfirmationResult(result);
+      setStep('otp');
+    } catch (err: any) {
+      console.error("Firebase Phone Auth error:", err);
+      if (window.recaptchaVerifier) {
+        try {
+          window.recaptchaVerifier.clear();
+          window.recaptchaVerifier = undefined;
+        } catch (e) {}
+      }
+      setSendError('SMS OTP भेजने में समस्या आई। कृपया अपना 10 अंकों का सही मोबाइल नंबर दर्ज करें।');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!otpInput || otpInput.trim().length < 6) {
+      setOtpError('कृपया आपके मोबाइल पर प्राप्त 6 अंकों का SMS OTP दर्ज करें।');
+      return;
+    }
+
+    setLoading(true);
+    setOtpError('');
+
+    try {
+      if (confirmationResult) {
+        await confirmationResult.confirm(otpInput.trim());
+        setStep('success');
+      } else {
+        setOtpError('सत्यापन सत्र समाप्त हो गया है। कृपया पुनः प्रयास करें।');
+      }
+    } catch (err: any) {
+      console.error("OTP verification error:", err);
+      setOtpError('गलत OTP! कृपया आपके मोबाइल पर प्राप्त 6 अंकों का SMS OTP दर्ज करें।');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReset = () => {
@@ -52,10 +95,15 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
     setFormData({ name: '', phone: '', age: '', address: '', pincode: '' });
     setOtpInput('');
     setOtpError('');
+    setSendError('');
+    setConfirmationResult(null);
   };
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
+      {/* Invisible Recaptcha Container for Drawer */}
+      <div id="recaptcha-container-drawer"></div>
+
       {/* Backdrop */}
       <div 
         onClick={onClose}
@@ -132,7 +180,10 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                     required
                     maxLength={10}
                     value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, phone: e.target.value });
+                      setSendError('');
+                    }}
                     placeholder="अपना 10 अंकों का नंबर दर्ज करें"
                     className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
                   />
@@ -186,13 +237,25 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                   />
                 </div>
 
+                {sendError && (
+                  <p className="text-xs font-bold text-red-600 text-center pt-1">{sendError}</p>
+                )}
+
                 {/* Submit Button */}
                 <div className="pt-3">
                   <button
                     type="submit"
-                    className="w-full bg-[#cc0000] hover:bg-red-700 text-white font-black text-base py-4 rounded-2xl shadow-xl transition-all uppercase tracking-wider"
+                    disabled={loading}
+                    className="w-full bg-[#cc0000] hover:bg-red-700 disabled:opacity-60 text-white font-black text-base py-4 rounded-2xl shadow-xl transition-all uppercase tracking-wider flex items-center justify-center gap-2"
                   >
-                    SEND ORDER
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>OTP भेजा जा रहा है...</span>
+                      </>
+                    ) : (
+                      <span>SEND ORDER</span>
+                    )}
                   </button>
                 </div>
 
@@ -202,36 +265,22 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
             {step === 'otp' && (
               <form onSubmit={handleVerifyOtp} className="space-y-5">
                 
-                {/* Simulated OTP Notification Banner */}
-                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-center">
-                  <p className="text-xs text-emerald-800 font-medium">
-                    सत्यापन कोड (Demo OTP): <strong className="text-emerald-950 text-base ml-1">{generatedOtp}</strong>
-                  </p>
-                  <button
-                    type="button"
-                    onClick={handleAutoFill}
-                    className="mt-2 text-xs font-bold text-emerald-700 underline hover:text-emerald-900"
-                  >
-                    [ Auto-fill OTP ]
-                  </button>
-                </div>
-
                 {/* OTP Input */}
                 <div>
                   <label className="block text-xs font-bold text-slate-900 mb-1.5 text-center">
-                    4 अंकों का OTP दर्ज करें (Enter 4-Digit OTP)
+                    6 अंकों का SMS OTP दर्ज करें (Enter 6-Digit SMS OTP)
                   </label>
                   <input
                     type="text"
                     required
-                    maxLength={4}
+                    maxLength={6}
                     value={otpInput}
                     onChange={(e) => {
                       setOtpInput(e.target.value);
                       setOtpError('');
                     }}
-                    placeholder="••••"
-                    className="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-300 text-center font-bold text-2xl tracking-[0.5em] text-slate-900 placeholder-slate-300 focus:outline-none focus:border-red-600 bg-slate-50"
+                    placeholder="••••••"
+                    className="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-300 text-center font-bold text-2xl tracking-[0.4em] text-slate-900 placeholder-slate-300 focus:outline-none focus:border-red-600 bg-slate-50"
                   />
                   {otpError && (
                     <p className="text-xs font-bold text-red-600 text-center mt-2">{otpError}</p>
@@ -242,9 +291,17 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                 <div className="space-y-3 pt-2">
                   <button
                     type="submit"
-                    className="w-full bg-[#cc0000] hover:bg-red-700 text-white font-black text-base py-4 rounded-2xl shadow-xl transition-all"
+                    disabled={loading}
+                    className="w-full bg-[#cc0000] hover:bg-red-700 disabled:opacity-60 text-white font-black text-base py-4 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-2"
                   >
-                    वेरीफाई और ऑर्डर कन्फर्म करें (Verify & Confirm)
+                    {loading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>सत्यापित किया जा रहा है...</span>
+                      </>
+                    ) : (
+                      <span>वेरीफाई और ऑर्डर कन्फर्म करें (Verify & Confirm)</span>
+                    )}
                   </button>
 
                   <button
@@ -271,7 +328,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                 </h3>
                 <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-600 space-y-1 text-left max-w-sm mx-auto">
                   <p><strong>नाम:</strong> {formData.name}</p>
-                  <p><strong>नंबर:</strong> +91 {formData.phone} <span className="text-emerald-600 font-bold ml-1">✓ Verified</span></p>
+                  <p><strong>नंबर:</strong> +91 {formData.phone.slice(-10)} <span className="text-emerald-600 font-bold ml-1">✓ Real SMS OTP Verified</span></p>
                   <p><strong>पता:</strong> {formData.address}, {formData.pincode}</p>
                 </div>
                 <p className="text-xs text-slate-600">

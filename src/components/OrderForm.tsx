@@ -20,16 +20,23 @@ export const OrderForm: React.FC = () => {
   });
 
   const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
-  const [generatedOtp, setGeneratedOtp] = useState('1234');
   const [otpInput, setOtpInput] = useState('');
   const [otpError, setOtpError] = useState('');
+  const [sendError, setSendError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSendOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.phone || !formData.address) return;
 
+    const cleanPhone = formData.phone.trim().replace(/\D/g, '');
+    if (cleanPhone.length < 10) {
+      setSendError('कृपया सही 10 अंकों का मोबाइल नंबर दर्ज करें।');
+      return;
+    }
+
     setLoading(true);
+    setSendError('');
     setOtpError('');
 
     try {
@@ -39,16 +46,19 @@ export const OrderForm: React.FC = () => {
         });
       }
 
-      const formattedPhone = formData.phone.startsWith('+') ? formData.phone : `+91${formData.phone}`;
+      const formattedPhone = cleanPhone.startsWith('91') && cleanPhone.length === 12 ? `+${cleanPhone}` : `+91${cleanPhone.slice(-10)}`;
       const result = await signInWithPhoneNumber(auth, formattedPhone, window.recaptchaVerifier);
       setConfirmationResult(result);
       setStep('otp');
     } catch (err: any) {
-      console.warn("Firebase Phone Auth fallback:", err);
-      const demoOtp = Math.floor(1000 + Math.random() * 9000).toString();
-      setGeneratedOtp(demoOtp);
-      setConfirmationResult(null);
-      setStep('otp');
+      console.error("Firebase Phone Auth error:", err);
+      if (window.recaptchaVerifier) {
+        try {
+          window.recaptchaVerifier.clear();
+          window.recaptchaVerifier = undefined;
+        } catch (e) {}
+      }
+      setSendError('SMS OTP भेजने में समस्या आई। कृपया अपना 10 अंकों का सही मोबाइल नंबर दर्ज करें।');
     } finally {
       setLoading(false);
     }
@@ -56,28 +66,27 @@ export const OrderForm: React.FC = () => {
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!otpInput || otpInput.trim().length < 6) {
+      setOtpError('कृपया आपके मोबाइल पर प्राप्त 6 अंकों का SMS OTP दर्ज करें।');
+      return;
+    }
+
     setLoading(true);
     setOtpError('');
 
     try {
       if (confirmationResult) {
-        await confirmationResult.confirm(otpInput);
-        setStep('success');
-      } else if (otpInput === generatedOtp || otpInput === '1234' || otpInput === '123456') {
+        await confirmationResult.confirm(otpInput.trim());
         setStep('success');
       } else {
-        setOtpError('गलत OTP दर्ज किया गया है! कृपया पुनः प्रयास करें।');
+        setOtpError('सत्यापन सत्र समाप्त हो गया है। कृपया पुनः प्रयास करें।');
       }
     } catch (err: any) {
-      setOtpError('सत्यापन विफल हुआ! कृपया 6-अंकों का SMS OTP पुनः जाँचें।');
+      console.error("OTP verification error:", err);
+      setOtpError('गलत OTP! कृपया आपके मोबाइल पर प्राप्त 6 अंकों का SMS OTP दर्ज करें।');
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleAutoFill = () => {
-    setOtpInput(generatedOtp);
-    setOtpError('');
   };
 
   const handleReset = () => {
@@ -85,6 +94,7 @@ export const OrderForm: React.FC = () => {
     setFormData({ name: '', phone: '', age: '', address: '', pincode: '' });
     setOtpInput('');
     setOtpError('');
+    setSendError('');
     setConfirmationResult(null);
   };
 
@@ -107,7 +117,7 @@ export const OrderForm: React.FC = () => {
             </h2>
             <p className="text-xs text-slate-500 mt-1">
               {step === 'otp'
-                ? `आपके मोबाइल नंबर +91 ${formData.phone} पर SMS OTP भेजा गया है`
+                ? `आपके मोबाइल नंबर +91 ${formData.phone.slice(-10)} पर 6-अंकों का SMS OTP भेजा गया है`
                 : 'नीचे दी गई जानकारी भरें और अपना ऑर्डर दर्ज करें'}
             </p>
           </div>
@@ -140,7 +150,10 @@ export const OrderForm: React.FC = () => {
                   required
                   maxLength={10}
                   value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, phone: e.target.value });
+                    setSendError('');
+                  }}
                   placeholder="अपना 10 अंकों का नंबर दर्ज करें"
                   className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
                 />
@@ -194,6 +207,10 @@ export const OrderForm: React.FC = () => {
                 />
               </div>
 
+              {sendError && (
+                <p className="text-xs font-bold text-red-600 text-center pt-1">{sendError}</p>
+              )}
+
               {/* Red Send Button */}
               <div className="pt-4">
                 <button
@@ -218,38 +235,22 @@ export const OrderForm: React.FC = () => {
           {step === 'otp' && (
             <form onSubmit={handleVerifyOtp} className="space-y-5">
               
-              {/* OTP Info / Demo Banner */}
-              {!confirmationResult && (
-                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-center">
-                  <p className="text-xs text-emerald-800 font-medium">
-                    सत्यापन कोड (Demo OTP): <strong className="text-emerald-950 text-base ml-1">{generatedOtp}</strong>
-                  </p>
-                  <button
-                    type="button"
-                    onClick={handleAutoFill}
-                    className="mt-2 text-xs font-bold text-emerald-700 underline hover:text-emerald-900"
-                  >
-                    [ Auto-fill OTP ]
-                  </button>
-                </div>
-              )}
-
               {/* OTP Input */}
               <div>
                 <label className="block text-xs font-bold text-slate-900 mb-1.5 text-center">
-                  {confirmationResult ? '6 अंकों का SMS OTP दर्ज करें (Enter 6-Digit SMS OTP)' : '4 अंकों का OTP दर्ज करें (Enter 4-Digit OTP)'}
+                  6 अंकों का SMS OTP दर्ज करें (Enter 6-Digit SMS OTP)
                 </label>
                 <input
                   type="text"
                   required
-                  maxLength={confirmationResult ? 6 : 4}
+                  maxLength={6}
                   value={otpInput}
                   onChange={(e) => {
                     setOtpInput(e.target.value);
                     setOtpError('');
                   }}
-                  placeholder={confirmationResult ? "••••••" : "••••"}
-                  className="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-300 text-center font-bold text-2xl tracking-[0.5em] text-slate-900 placeholder-slate-300 focus:outline-none focus:border-red-600 bg-slate-50"
+                  placeholder="••••••"
+                  className="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-300 text-center font-bold text-2xl tracking-[0.4em] text-slate-900 placeholder-slate-300 focus:outline-none focus:border-red-600 bg-slate-50"
                 />
                 {otpError && (
                   <p className="text-xs font-bold text-red-600 text-center mt-2">{otpError}</p>
@@ -296,7 +297,7 @@ export const OrderForm: React.FC = () => {
               </h3>
               <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-600 space-y-1 text-left max-w-sm mx-auto">
                 <p><strong>नाम:</strong> {formData.name}</p>
-                <p><strong>नंबर:</strong> +91 {formData.phone} <span className="text-emerald-600 font-bold ml-1">✓ Verified via Firebase</span></p>
+                <p><strong>नंबर:</strong> +91 {formData.phone.slice(-10)} <span className="text-emerald-600 font-bold ml-1">✓ Real SMS OTP Verified</span></p>
                 <p><strong>पता:</strong> {formData.address}, {formData.pincode}</p>
               </div>
               <p className="text-xs text-slate-600">
