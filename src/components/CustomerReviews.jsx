@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Star, CheckCircle2, MessageSquarePlus, X } from 'lucide-react';
 
 const initialReviews = [
@@ -7,7 +7,7 @@ const initialReviews = [
     author: 'Vikram Singh',
     rating: 5,
     date: '2 days ago',
-    comment: 'Horse Fire Tablets à¤µà¤¾à¤¸à¥à¤¤à¤µ à¤®à¥‡à¤‚ à¤•à¤¾à¤® à¤•à¤°à¤¤à¤¾ à¤¹à¥ˆ! 1 à¤®à¤¹à¥€à¤¨à¥‡ à¤•à¥‡ à¤¨à¤¿à¤¯à¤®à¤¿à¤¤ à¤‰à¤ªà¤¯à¥‹à¤— à¤•à¥‡ à¤¬à¤¾à¤¦ à¤Šà¤°à¥à¤œà¤¾ à¤”à¤° à¤¸à¥à¤Ÿà¥ˆà¤®à¤¿à¤¨à¤¾ à¤®à¥‡à¤‚ à¤•à¤¾à¤«à¥€ à¤¸à¥à¤§à¤¾à¤° à¤®à¤¹à¤¸à¥‚à¤¸ à¤¹à¥à¤†à¥¤',
+    comment: 'Horse Fire Tablets वास्तव में काम करता है! 1 महीने के नियमित उपयोग के बाद ऊर्जा और स्टैमिना में काफी सुधार महसूस हुआ।',
     verified: true,
   },
   {
@@ -15,7 +15,7 @@ const initialReviews = [
     author: 'Rajesh Kumar',
     rating: 5,
     date: '4 days ago',
-    comment: 'à¤‰à¤¤à¥à¤ªà¤¾à¤¦ à¤•à¥€ à¤—à¥à¤£à¤µà¤¤à¥à¤¤à¤¾ à¤¬à¤¹à¥à¤¤ à¤…à¤šà¥à¤›à¥€ à¤¹à¥ˆà¥¤ à¤¦à¥‚à¤§ à¤•à¥‡ à¤¸à¤¾à¤¥ à¤²à¥‡à¤¨à¥‡ à¤¸à¥‡ 15-20 à¤¦à¤¿à¤¨à¥‹à¤‚ à¤®à¥‡à¤‚ à¤ªà¤°à¤¿à¤£à¤¾à¤® à¤¦à¤¿à¤–à¤¨à¥‡ à¤²à¤—à¤¤à¤¾ à¤¹à¥ˆà¥¤ COD à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤¬à¤¹à¥à¤¤ à¤¤à¥‡à¤œà¤¼ à¤¥à¥€à¥¤',
+    comment: 'उत्पाद की गुणवत्ता बहुत अच्छी है। दूध के साथ लेने से 15-20 दिनों में परिणाम दिखने लगता है। COD डिलीवरी बहुत तेज़ थी।',
     verified: true,
   },
   {
@@ -23,7 +23,7 @@ const initialReviews = [
     author: 'Amit Sharma',
     rating: 4,
     date: '1 week ago',
-    comment: '100% à¤†à¤¯à¥à¤°à¥à¤µà¥‡à¤¦à¤¿à¤• à¤”à¤° à¤¸à¥à¤°à¤•à¥à¤·à¤¿à¤¤à¥¤ à¤¥à¤•à¤¾à¤¨ à¤®à¤¹à¤¸à¥‚à¤¸ à¤¨à¤¹à¥€à¤‚ à¤¹à¥‹à¤¤à¥€ à¤¦à¤¿à¤¨à¤­à¤°à¥¤ à¤ªà¥ˆà¤•à¥‡à¤œà¤¿à¤‚à¤— à¤­à¥€ à¤¬à¤¹à¥à¤¤ à¤…à¤šà¥à¤›à¥€ à¤¥à¥€à¥¤',
+    comment: '100% आयुर्वेदिक और सुरक्षित। थकान महसूस नहीं होती दिनभर। पैकेजिंग भी बहुत अच्छी थी।',
     verified: true,
   },
   {
@@ -31,7 +31,7 @@ const initialReviews = [
     author: 'Suresh Patel',
     rating: 5,
     date: '2 weeks ago',
-    comment: 'à¤•à¤¾à¤œà¤² à¤°à¤¾à¤˜à¤µà¤¾à¤¨à¥€ à¤œà¥€ à¤•à¥‡ à¤µà¤¿à¤œà¥à¤žà¤¾à¤ªà¤¨ à¤•à¥‡ à¤¬à¤¾à¤¦ à¤‘à¤°à¥à¤¡à¤° à¤•à¤¿à¤¯à¤¾ à¤¥à¤¾à¥¤ à¤¬à¤¹à¥à¤¤ à¤¬à¤¢à¤¼à¤¿à¤¯à¤¾ à¤ªà¥à¤°à¥‹à¤¡à¤•à¥à¤Ÿ à¤¹à¥ˆ, à¤ªà¥‚à¤°à¥‡ à¤ªà¤°à¤¿à¤µà¤¾à¤° à¤¨à¥‡ à¤­à¤°à¥‹à¤¸à¤¾ à¤œà¤¤à¤¾à¤¯à¤¾à¥¤',
+    comment: 'काजल राघवानी जी के विज्ञापन के बाद ऑर्डर किया था। बहुत बढ़िया प्रोडक्ट है, पूरे परिवार ने भरोसा जताया।',
     verified: true,
   },
 ];
@@ -69,7 +69,7 @@ export const CustomerReviews = () => {
         <div className="bg-slate-50 rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 mb-10">
           
           <div className="text-center md:text-left">
-            <h2 className="font-serif text-3xl font-extrabold text-slate-900">à¤—à¥à¤°à¤¾à¤¹à¤• à¤¸à¤®à¥€à¤•à¥à¤·à¤¾à¤à¤‚ (Reviews)</h2>
+            <h2 className="font-serif text-3xl font-extrabold text-slate-900">ग्राहक समीक्षाएं (Reviews)</h2>
             <div className="flex items-center gap-3 mt-2 justify-center md:justify-start">
               <span className="text-4xl font-extrabold text-slate-900">4.83</span>
               <div>
@@ -88,7 +88,7 @@ export const CustomerReviews = () => {
             className="bg-[#2f6f4e] hover:bg-emerald-800 text-white font-bold text-sm px-6 py-3.5 rounded-full shadow-lg flex items-center gap-2 transition-all shrink-0"
           >
             <MessageSquarePlus className="w-4 h-4" />
-            <span>à¤¸à¤®à¥€à¤•à¥à¤·à¤¾ à¤²à¤¿à¤–à¥‡à¤‚ (Write a Review)</span>
+            <span>समीक्षा लिखें (Write a Review)</span>
           </button>
 
         </div>
@@ -140,7 +140,7 @@ export const CustomerReviews = () => {
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5 relative animate-fadeIn">
             
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="font-serif font-bold text-lg text-slate-900">à¤…à¤ªà¤¨à¥€ à¤¸à¤®à¥€à¤•à¥à¤·à¤¾ à¤²à¤¿à¤–à¥‡à¤‚</h3>
+              <h3 className="font-serif font-bold text-lg text-slate-900">अपनी समीक्षा लिखें</h3>
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="text-slate-400 hover:text-slate-700 p-1 rounded-full"
@@ -151,38 +151,38 @@ export const CustomerReviews = () => {
 
             <form onSubmit={handleAddReview} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-900 mb-1">à¤†à¤ªà¤•à¤¾ à¤¨à¤¾à¤®</label>
+                <label className="block text-xs font-bold text-slate-900 mb-1">आपका नाम</label>
                 <input
                   type="text"
                   required
                   value={newAuthor}
                   onChange={(e) => setNewAuthor(e.target.value)}
-                  placeholder="à¤…à¤ªà¤¨à¤¾ à¤¨à¤¾à¤® à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚"
+                  placeholder="अपना नाम दर्ज करें"
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-900 mb-1">à¤°à¥‡à¤Ÿà¤¿à¤‚à¤— (Rating)</label>
+                <label className="block text-xs font-bold text-slate-900 mb-1">रेटिंग (Rating)</label>
                 <select
                   value={newRating}
                   onChange={(e) => setNewRating(Number(e.target.value))}
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700 bg-white"
                 >
-                  <option value={5}>5 Stars â˜…â˜…â˜…â˜…â˜…</option>
-                  <option value={4}>4 Stars â˜…â˜…â˜…â˜…â˜†</option>
-                  <option value={3}>3 Stars â˜…â˜…â˜…â˜†â˜†</option>
+                  <option value={5}>5 Stars ★★★★★</option>
+                  <option value={4}>4 Stars ★★★★☆</option>
+                  <option value={3}>3 Stars ★★★☆☆</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-900 mb-1">à¤†à¤ªà¤•à¥€ à¤¸à¤®à¥€à¤•à¥à¤·à¤¾ (Review)</label>
+                <label className="block text-xs font-bold text-slate-900 mb-1">आपकी समीक्षा (Review)</label>
                 <textarea
                   rows={3}
                   required
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="à¤‰à¤¤à¥à¤ªà¤¾à¤¦ à¤•à¥‡ à¤…à¤¨à¥à¤­à¤µ à¤•à¥‡ à¤¬à¤¾à¤°à¥‡ à¤®à¥‡à¤‚ à¤¬à¤¤à¤¾à¤à¤‚..."
+                  placeholder="उत्पाद के अनुभव के बारे में बताएं..."
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700"
                 />
               </div>
