@@ -175,18 +175,25 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                   <label className="block text-xs font-bold text-slate-900 mb-1">
                     मोबाइल नंबर (Phone Number)
                   </label>
-                  <input
-                    type="tel"
-                    required
-                    maxLength={10}
-                    value={formData.phone}
-                    onChange={(e) => {
-                      setFormData({ ...formData, phone: e.target.value });
-                      setSendError('');
-                    }}
-                    placeholder="अपना 10 अंकों का नंबर दर्ज करें"
-                    className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
-                  />
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5 px-3 py-3 rounded-xl border border-slate-300 bg-slate-100 text-slate-800 text-sm font-bold shrink-0 select-none shadow-sm">
+                      <span className="text-base">🇮🇳</span>
+                      <span>+91</span>
+                    </div>
+                    <input
+                      type="tel"
+                      required
+                      maxLength={10}
+                      value={formData.phone}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '');
+                        setFormData({ ...formData, phone: val });
+                        setSendError('');
+                      }}
+                      placeholder="10 अंकों का नंबर दर्ज करें"
+                      className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
+                    />
+                  </div>
                 </div>
 
                 {/* Age */}
