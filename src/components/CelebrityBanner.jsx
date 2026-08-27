@@ -1,6 +1,6 @@
-import React from 'react';
+﻿import React from 'react';
 
-export const CelebrityBanner: React.FC = () => {
+export const CelebrityBanner = () => {
   return (
     <section className="bg-slate-950 overflow-hidden border-b border-slate-900 shadow-2xl w-full max-w-full">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 w-full max-w-full">

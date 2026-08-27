@@ -1,17 +1,7 @@
-import React, { useState, useRef } from 'react';
+﻿import React, { useState, useRef } from 'react';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
-interface ReelVideo {
-  id: number;
-  title: string;
-  duration: string;
-  type: 'mp4' | 'youtube';
-  videoUrl: string;
-  youtubeId?: string;
-  thumb?: string;
-}
-
-const reelVideos: ReelVideo[] = [
+const reelVideos = [
   {
     id: 1,
     title: 'Kajal Raghwani Official Review',
@@ -31,8 +21,8 @@ const reelVideos: ReelVideo[] = [
   },
   {
     id: 3,
-    title: 'Horse Fire Tablet Video',
-    duration: '0:45',
+    title: 'Kajal Raghwani Endorsement',
+    duration: '0:25',
     type: 'mp4',
     videoUrl: '/video/kajal-raghwani-video.mp4',
     thumb: '/kajal_raghwani.jpg',
@@ -42,14 +32,14 @@ const reelVideos: ReelVideo[] = [
     title: 'Horse Fire YouTube Short 2',
     duration: '0:35',
     type: 'youtube',
-    videoUrl: 'https://www.youtube.com/embed/qc2HOgPCMh8?autoplay=1&mute=1&loop=1&playlist=qc2HOgPCMh8',
-    youtubeId: 'qc2HOgPCMh8',
-    thumb: 'https://img.youtube.com/vi/qc2HOgPCMh8/hqdefault.jpg',
+    videoUrl: 'https://www.youtube.com/embed/2_V463Qy2r8?autoplay=1&mute=1&loop=1&playlist=2_V463Qy2r8',
+    youtubeId: '2_V463Qy2r8',
+    thumb: 'https://img.youtube.com/vi/2_V463Qy2r8/hqdefault.jpg',
   },
   {
     id: 5,
-    title: '17 Ayurvedic Herbs Benefits',
-    duration: '0:35',
+    title: 'Horse Fire Short Review 3',
+    duration: '0:40',
     type: 'youtube',
     videoUrl: 'https://www.youtube.com/embed/1pnw1pMcdqo?autoplay=1&mute=1&loop=1&playlist=1pnw1pMcdqo',
     youtubeId: '1pnw1pMcdqo',
@@ -57,9 +47,9 @@ const reelVideos: ReelVideo[] = [
   },
 ];
 
-export const WatchAndBuy: React.FC = () => {
-  const [playingId, setPlayingId] = useState<number | null>(1);
-  const [mutedMap, setMutedMap] = useState<{ [key: number]: boolean }>({
+export const WatchAndBuy = () => {
+  const [playingId, setPlayingId] = useState(1);
+  const [mutedMap, setMutedMap] = useState({
     1: true,
     2: true,
     3: true,
@@ -67,9 +57,9 @@ export const WatchAndBuy: React.FC = () => {
     5: true,
   });
 
-  const videoRefs = useRef<{ [key: number]: HTMLVideoElement | null }>({});
+  const videoRefs = useRef({});
 
-  const togglePlay = (id: number) => {
+  const togglePlay = (id) => {
     const video = videoRefs.current[id];
     if (!video) return;
 
@@ -92,7 +82,7 @@ export const WatchAndBuy: React.FC = () => {
     }
   };
 
-  const toggleMute = (e: React.MouseEvent, id: number) => {
+  const toggleMute = (e, id) => {
     e.stopPropagation();
     const video = videoRefs.current[id];
     if (!video) return;

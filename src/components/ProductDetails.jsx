@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { ShoppingCart, Zap, RefreshCw, ShieldCheck, Truck, CreditCard, Award, CheckCircle2 } from 'lucide-react';
 
 const galleryImages = [
@@ -20,7 +20,7 @@ const galleryImages = [
   {
     url: '/banners/banner2.jpg',
     alt: 'Ayurvedic Doctor Endorsement',
-    tag: 'Dr. का भरोसा',
+    tag: 'Dr. à¤•à¤¾ à¤­à¤°à¥‹à¤¸à¤¾',
   },
   {
     url: '/banners/banner3.jpg',
@@ -34,11 +34,7 @@ const galleryImages = [
   },
 ];
 
-interface ProductDetailsProps {
-  onOrderClick: () => void;
-}
-
-export const ProductDetails: React.FC<ProductDetailsProps> = ({ onOrderClick }) => {
+export const ProductDetails = ({ onOrderClick }) => {
   const [selectedImgIndex, setSelectedImgIndex] = useState(0);
 
   const scrollToOrderForm = () => {
@@ -117,13 +113,13 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ onOrderClick }) 
                 Horse Fire Tablets
               </h1>
               <p className="text-slate-600 text-xs sm:text-sm mt-1.5 leading-relaxed">
-                Promotes daily energy, stamina and overall wellness — crafted with traditional Ayurvedic herbs.
+                Promotes daily energy, stamina and overall wellness â€” crafted with traditional Ayurvedic herbs.
               </p>
 
               {/* Star Rating */}
               <div className="flex items-center gap-2 mt-2.5">
                 <div className="flex text-amber-500 text-sm">
-                  {'★'.repeat(5)}
+                  {'â˜…'.repeat(5)}
                 </div>
                 <span className="text-xs font-bold text-slate-800">4.6 (2,180 reviews)</span>
               </div>
@@ -137,7 +133,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ onOrderClick }) 
                 </span>
                 <div>
                   <h4 className="font-bold text-xs sm:text-sm text-white">Just for online payments!</h4>
-                  <p className="text-[11px] sm:text-xs text-amber-200/80">Pay online and get it for just ₹1,349</p>
+                  <p className="text-[11px] sm:text-xs text-amber-200/80">Pay online and get it for just â‚¹1,349</p>
                 </div>
               </div>
             </div>
@@ -149,13 +145,13 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ onOrderClick }) 
               </span>
 
               <div className="flex items-baseline justify-center gap-2 sm:gap-3 mt-1 sm:mt-2">
-                <span className="font-extrabold text-2xl sm:text-3xl text-slate-900">₹1,499</span>
-                <span className="text-xs sm:text-sm text-slate-400 line-through font-semibold">₹3,000</span>
+                <span className="font-extrabold text-2xl sm:text-3xl text-slate-900">â‚¹1,499</span>
+                <span className="text-xs sm:text-sm text-slate-400 line-through font-semibold">â‚¹3,000</span>
               </div>
               <p className="text-[10px] sm:text-[11px] text-slate-500 mt-0.5">MRP incl. of all taxes</p>
 
               <div className="mt-2.5 sm:mt-3 inline-block bg-red-700 text-white font-bold text-[10px] sm:text-xs px-3 py-1 rounded-full uppercase tracking-wider">
-                Save ₹1501
+                Save â‚¹1501
               </div>
             </div>
 
@@ -166,14 +162,14 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ onOrderClick }) 
                 className="bg-[#c02425] hover:bg-red-700 text-white font-black text-sm sm:text-base py-3.5 sm:py-4 rounded-2xl shadow-lg shadow-red-700/30 flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5"
               >
                 <ShoppingCart className="w-4 sm:w-5 h-4 sm:h-5" />
-                <span>अभी ऑर्डर करें</span>
+                <span>à¤…à¤­à¥€ à¤‘à¤°à¥à¤¡à¤° à¤•à¤°à¥‡à¤‚</span>
               </button>
 
               <button
                 onClick={scrollToOrderForm}
                 className="bg-white hover:bg-slate-50 border-2 border-slate-900 text-slate-900 font-bold text-sm sm:text-base py-3.5 sm:py-4 rounded-2xl shadow-sm transition-all"
               >
-                कार्ट में जोड़ें
+                à¤•à¤¾à¤°à¥à¤Ÿ à¤®à¥‡à¤‚ à¤œà¥‹à¤¡à¤¼à¥‡à¤‚
               </button>
             </div>
 
@@ -249,28 +245,28 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ onOrderClick }) 
             <div className="grid grid-cols-4 gap-2 sm:gap-4 text-center pt-1">
               <div>
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-amber-600 flex items-center justify-center mx-auto text-amber-700 text-xs sm:text-base mb-1 bg-amber-50">
-                  🌱
+                  ðŸŒ±
                 </div>
                 <span className="text-[9px] sm:text-[10px] font-bold uppercase text-slate-700 block">AYUSH</span>
               </div>
 
               <div>
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-emerald-600 flex items-center justify-center mx-auto text-emerald-700 text-xs sm:text-base mb-1 bg-emerald-50">
-                  ✓
+                  âœ“
                 </div>
                 <span className="text-[9px] sm:text-[10px] font-bold uppercase text-slate-700 block">FDA Approved</span>
               </div>
 
               <div>
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-amber-600 flex items-center justify-center mx-auto text-amber-700 text-xs sm:text-base mb-1 bg-amber-50">
-                  ✦
+                  âœ¦
                 </div>
                 <span className="text-[9px] sm:text-[10px] font-bold uppercase text-slate-700 block">GMP Quality</span>
               </div>
 
               <div>
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-emerald-600 flex items-center justify-center mx-auto text-emerald-700 text-xs sm:text-base mb-1 bg-emerald-50">
-                  🇮🇳
+                  ðŸ‡®ðŸ‡³
                 </div>
                 <span className="text-[9px] sm:text-[10px] font-bold uppercase text-slate-700 block">Made In India</span>
               </div>

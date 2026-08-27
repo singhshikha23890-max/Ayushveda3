@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const bannerSlides = [
@@ -29,11 +29,7 @@ const bannerSlides = [
   },
 ];
 
-interface TopHeroSliderProps {
-  onOrderClick: () => void;
-}
-
-export const TopHeroSlider: React.FC<TopHeroSliderProps> = ({ onOrderClick }) => {
+export const TopHeroSlider = ({ onOrderClick }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -45,12 +41,12 @@ export const TopHeroSlider: React.FC<TopHeroSliderProps> = ({ onOrderClick }) =>
     return () => clearInterval(timer);
   }, [isPaused]);
 
-  const handlePrev = (e: React.MouseEvent) => {
+  const handlePrev = (e) => {
     e.stopPropagation();
     setCurrentIndex((prev) => (prev - 1 + bannerSlides.length) % bannerSlides.length);
   };
 
-  const handleNext = (e: React.MouseEvent) => {
+  const handleNext = (e) => {
     e.stopPropagation();
     setCurrentIndex((prev) => (prev + 1) % bannerSlides.length);
   };

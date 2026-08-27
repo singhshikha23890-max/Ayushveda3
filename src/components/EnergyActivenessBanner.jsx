@@ -1,6 +1,6 @@
-import React from 'react';
+﻿import React from 'react';
 
-export const EnergyActivenessBanner: React.FC = () => {
+export const EnergyActivenessBanner = () => {
   return (
     <section className="py-12 sm:py-16 bg-white overflow-hidden border-b border-slate-200 w-full max-w-full">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full max-w-full">

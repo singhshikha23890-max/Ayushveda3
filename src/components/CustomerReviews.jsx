@@ -1,22 +1,13 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Star, CheckCircle2, MessageSquarePlus, X } from 'lucide-react';
 
-interface ReviewItem {
-  id: number;
-  author: string;
-  rating: number;
-  date: string;
-  comment: string;
-  verified: boolean;
-}
-
-const initialReviews: ReviewItem[] = [
+const initialReviews = [
   {
     id: 1,
     author: 'Vikram Singh',
     rating: 5,
     date: '2 days ago',
-    comment: 'Horse Fire Tablets वास्तव में काम करता है! 1 महीने के नियमित उपयोग के बाद ऊर्जा और स्टैमिना में काफी सुधार महसूस हुआ।',
+    comment: 'Horse Fire Tablets à¤µà¤¾à¤¸à¥à¤¤à¤µ à¤®à¥‡à¤‚ à¤•à¤¾à¤® à¤•à¤°à¤¤à¤¾ à¤¹à¥ˆ! 1 à¤®à¤¹à¥€à¤¨à¥‡ à¤•à¥‡ à¤¨à¤¿à¤¯à¤®à¤¿à¤¤ à¤‰à¤ªà¤¯à¥‹à¤— à¤•à¥‡ à¤¬à¤¾à¤¦ à¤Šà¤°à¥à¤œà¤¾ à¤”à¤° à¤¸à¥à¤Ÿà¥ˆà¤®à¤¿à¤¨à¤¾ à¤®à¥‡à¤‚ à¤•à¤¾à¤«à¥€ à¤¸à¥à¤§à¤¾à¤° à¤®à¤¹à¤¸à¥‚à¤¸ à¤¹à¥à¤†à¥¤',
     verified: true,
   },
   {
@@ -24,7 +15,7 @@ const initialReviews: ReviewItem[] = [
     author: 'Rajesh Kumar',
     rating: 5,
     date: '4 days ago',
-    comment: 'उत्पाद की गुणवत्ता बहुत अच्छी है। दूध के साथ लेने से 15-20 दिनों में परिणाम दिखने लगता है। COD डिलीवरी बहुत तेज़ थी।',
+    comment: 'à¤‰à¤¤à¥à¤ªà¤¾à¤¦ à¤•à¥€ à¤—à¥à¤£à¤µà¤¤à¥à¤¤à¤¾ à¤¬à¤¹à¥à¤¤ à¤…à¤šà¥à¤›à¥€ à¤¹à¥ˆà¥¤ à¤¦à¥‚à¤§ à¤•à¥‡ à¤¸à¤¾à¤¥ à¤²à¥‡à¤¨à¥‡ à¤¸à¥‡ 15-20 à¤¦à¤¿à¤¨à¥‹à¤‚ à¤®à¥‡à¤‚ à¤ªà¤°à¤¿à¤£à¤¾à¤® à¤¦à¤¿à¤–à¤¨à¥‡ à¤²à¤—à¤¤à¤¾ à¤¹à¥ˆà¥¤ COD à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤¬à¤¹à¥à¤¤ à¤¤à¥‡à¤œà¤¼ à¤¥à¥€à¥¤',
     verified: true,
   },
   {
@@ -32,7 +23,7 @@ const initialReviews: ReviewItem[] = [
     author: 'Amit Sharma',
     rating: 4,
     date: '1 week ago',
-    comment: '100% आयुर्वेदिक और सुरक्षित। थकान महसूस नहीं होती दिनभर। पैकेजिंग भी बहुत अच्छी थी।',
+    comment: '100% à¤†à¤¯à¥à¤°à¥à¤µà¥‡à¤¦à¤¿à¤• à¤”à¤° à¤¸à¥à¤°à¤•à¥à¤·à¤¿à¤¤à¥¤ à¤¥à¤•à¤¾à¤¨ à¤®à¤¹à¤¸à¥‚à¤¸ à¤¨à¤¹à¥€à¤‚ à¤¹à¥‹à¤¤à¥€ à¤¦à¤¿à¤¨à¤­à¤°à¥¤ à¤ªà¥ˆà¤•à¥‡à¤œà¤¿à¤‚à¤— à¤­à¥€ à¤¬à¤¹à¥à¤¤ à¤…à¤šà¥à¤›à¥€ à¤¥à¥€à¥¤',
     verified: true,
   },
   {
@@ -40,22 +31,22 @@ const initialReviews: ReviewItem[] = [
     author: 'Suresh Patel',
     rating: 5,
     date: '2 weeks ago',
-    comment: 'काजल राघवानी जी के विज्ञापन के बाद ऑर्डर किया था। बहुत बढ़िया प्रोडक्ट है, पूरे परिवार ने भरोसा जताया।',
+    comment: 'à¤•à¤¾à¤œà¤² à¤°à¤¾à¤˜à¤µà¤¾à¤¨à¥€ à¤œà¥€ à¤•à¥‡ à¤µà¤¿à¤œà¥à¤žà¤¾à¤ªà¤¨ à¤•à¥‡ à¤¬à¤¾à¤¦ à¤‘à¤°à¥à¤¡à¤° à¤•à¤¿à¤¯à¤¾ à¤¥à¤¾à¥¤ à¤¬à¤¹à¥à¤¤ à¤¬à¤¢à¤¼à¤¿à¤¯à¤¾ à¤ªà¥à¤°à¥‹à¤¡à¤•à¥à¤Ÿ à¤¹à¥ˆ, à¤ªà¥‚à¤°à¥‡ à¤ªà¤°à¤¿à¤µà¤¾à¤° à¤¨à¥‡ à¤­à¤°à¥‹à¤¸à¤¾ à¤œà¤¤à¤¾à¤¯à¤¾à¥¤',
     verified: true,
   },
 ];
 
-export const CustomerReviews: React.FC = () => {
-  const [reviews, setReviews] = useState<ReviewItem[]>(initialReviews);
+export const CustomerReviews = () => {
+  const [reviews, setReviews] = useState(initialReviews);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newAuthor, setNewAuthor] = useState('');
   const [newRating, setNewRating] = useState(5);
   const [newComment, setNewComment] = useState('');
 
-  const handleAddReview = (e: React.FormEvent) => {
+  const handleAddReview = (e) => {
     e.preventDefault();
     if (newAuthor && newComment) {
-      const item: ReviewItem = {
+      const item = {
         id: Date.now(),
         author: newAuthor,
         rating: newRating,
@@ -78,7 +69,7 @@ export const CustomerReviews: React.FC = () => {
         <div className="bg-slate-50 rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6 mb-10">
           
           <div className="text-center md:text-left">
-            <h2 className="font-serif text-3xl font-extrabold text-slate-900">ग्राहक समीक्षाएं (Reviews)</h2>
+            <h2 className="font-serif text-3xl font-extrabold text-slate-900">à¤—à¥à¤°à¤¾à¤¹à¤• à¤¸à¤®à¥€à¤•à¥à¤·à¤¾à¤à¤‚ (Reviews)</h2>
             <div className="flex items-center gap-3 mt-2 justify-center md:justify-start">
               <span className="text-4xl font-extrabold text-slate-900">4.83</span>
               <div>
@@ -97,7 +88,7 @@ export const CustomerReviews: React.FC = () => {
             className="bg-[#2f6f4e] hover:bg-emerald-800 text-white font-bold text-sm px-6 py-3.5 rounded-full shadow-lg flex items-center gap-2 transition-all shrink-0"
           >
             <MessageSquarePlus className="w-4 h-4" />
-            <span>समीक्षा लिखें (Write a Review)</span>
+            <span>à¤¸à¤®à¥€à¤•à¥à¤·à¤¾ à¤²à¤¿à¤–à¥‡à¤‚ (Write a Review)</span>
           </button>
 
         </div>
@@ -149,7 +140,7 @@ export const CustomerReviews: React.FC = () => {
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-5 relative animate-fadeIn">
             
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="font-serif font-bold text-lg text-slate-900">अपनी समीक्षा लिखें</h3>
+              <h3 className="font-serif font-bold text-lg text-slate-900">à¤…à¤ªà¤¨à¥€ à¤¸à¤®à¥€à¤•à¥à¤·à¤¾ à¤²à¤¿à¤–à¥‡à¤‚</h3>
               <button
                 onClick={() => setIsModalOpen(false)}
                 className="text-slate-400 hover:text-slate-700 p-1 rounded-full"
@@ -160,38 +151,38 @@ export const CustomerReviews: React.FC = () => {
 
             <form onSubmit={handleAddReview} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-900 mb-1">आपका नाम</label>
+                <label className="block text-xs font-bold text-slate-900 mb-1">à¤†à¤ªà¤•à¤¾ à¤¨à¤¾à¤®</label>
                 <input
                   type="text"
                   required
                   value={newAuthor}
                   onChange={(e) => setNewAuthor(e.target.value)}
-                  placeholder="अपना नाम दर्ज करें"
+                  placeholder="à¤…à¤ªà¤¨à¤¾ à¤¨à¤¾à¤® à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚"
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-900 mb-1">रेटिंग (Rating)</label>
+                <label className="block text-xs font-bold text-slate-900 mb-1">à¤°à¥‡à¤Ÿà¤¿à¤‚à¤— (Rating)</label>
                 <select
                   value={newRating}
                   onChange={(e) => setNewRating(Number(e.target.value))}
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700 bg-white"
                 >
-                  <option value={5}>5 Stars ★★★★★</option>
-                  <option value={4}>4 Stars ★★★★☆</option>
-                  <option value={3}>3 Stars ★★★☆☆</option>
+                  <option value={5}>5 Stars â˜…â˜…â˜…â˜…â˜…</option>
+                  <option value={4}>4 Stars â˜…â˜…â˜…â˜…â˜†</option>
+                  <option value={3}>3 Stars â˜…â˜…â˜…â˜†â˜†</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-900 mb-1">आपकी समीक्षा (Review)</label>
+                <label className="block text-xs font-bold text-slate-900 mb-1">à¤†à¤ªà¤•à¥€ à¤¸à¤®à¥€à¤•à¥à¤·à¤¾ (Review)</label>
                 <textarea
                   rows={3}
                   required
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="उत्पाद के अनुभव के बारे में बताएं..."
+                  placeholder="à¤‰à¤¤à¥à¤ªà¤¾à¤¦ à¤•à¥‡ à¤…à¤¨à¥à¤­à¤µ à¤•à¥‡ à¤¬à¤¾à¤°à¥‡ à¤®à¥‡à¤‚ à¤¬à¤¤à¤¾à¤à¤‚..."
                   className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-700"
                 />
               </div>
@@ -200,7 +191,7 @@ export const CustomerReviews: React.FC = () => {
                 type="submit"
                 className="w-full bg-[#2f6f4e] hover:bg-emerald-800 text-white font-bold text-sm py-3.5 rounded-2xl shadow-md transition-all"
               >
-                समीक्षा पोस्ट करें (Submit Review)
+                à¤¸à¤®à¥€à¤•à¥à¤·à¤¾ à¤ªà¥‹à¤¸à¥à¤Ÿ à¤•à¤°à¥‡à¤‚ (Submit Review)
               </button>
             </form>
 

@@ -1,6 +1,6 @@
-import React from 'react';
+﻿import React from 'react';
 
-export const HowToConsume: React.FC = () => {
+export const HowToConsume = () => {
   return (
     <section className="py-16 bg-white overflow-hidden border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

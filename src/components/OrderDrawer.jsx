@@ -1,15 +1,10 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { X, CheckCircle2, ShoppingBag, ShieldCheck, Truck, KeyRound, ArrowLeft, Loader2 } from 'lucide-react';
-import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from 'firebase/auth';
+import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { auth } from '../firebase';
 
-interface OrderDrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => {
-  const [step, setStep] = useState<'form' | 'otp' | 'success'>('form');
+export const OrderDrawer = ({ isOpen, onClose }) => {
+  const [step, setStep] = useState('form');
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -18,7 +13,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
     pincode: '',
   });
 
-  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
+  const [confirmationResult, setConfirmationResult] = useState(null);
   const [otpInput, setOtpInput] = useState('');
   const [otpError, setOtpError] = useState('');
   const [sendError, setSendError] = useState('');
@@ -26,13 +21,13 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
 
   if (!isOpen) return null;
 
-  const handleSendOrder = async (e: React.FormEvent) => {
+  const handleSendOrder = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.phone || !formData.address) return;
 
     const cleanPhone = formData.phone.trim().replace(/\D/g, '');
     if (cleanPhone.length < 10) {
-      setSendError('कृपया सही 10 अंकों का मोबाइल नंबर दर्ज करें।');
+      setSendError('à¤•à¥ƒà¤ªà¤¯à¤¾ à¤¸à¤¹à¥€ 10 à¤…à¤‚à¤•à¥‹à¤‚ à¤•à¤¾ à¤®à¥‹à¤¬à¤¾à¤‡à¤² à¤¨à¤‚à¤¬à¤° à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚à¥¤');
       return;
     }
 
@@ -60,15 +55,15 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
         } catch (e) {}
       }
 
-      let errorMsg = 'SMS OTP भेजने में समस्या आई।';
+      let errorMsg = 'SMS OTP à¤­à¥‡à¤œà¤¨à¥‡ à¤®à¥‡à¤‚ à¤¸à¤®à¤¸à¥à¤¯à¤¾ à¤†à¤ˆà¥¤';
       if (err?.code === 'auth/quota-exceeded') {
-        errorMsg = 'Firebase Daily SMS Quota (10 SMS/day) पूरा हो गया है! Firebase Console में Test Phone Number जोड़ें या Billing ऑन करें।';
+        errorMsg = 'Firebase Daily SMS Quota (10 SMS/day) à¤ªà¥‚à¤°à¤¾ à¤¹à¥‹ à¤—à¤¯à¤¾ à¤¹à¥ˆ! Firebase Console à¤®à¥‡à¤‚ Test Phone Number à¤œà¥‹à¤¡à¤¼à¥‡à¤‚ à¤¯à¤¾ Billing à¤‘à¤¨ à¤•à¤°à¥‡à¤‚à¥¤';
       } else if (err?.code === 'auth/invalid-app-credential') {
-        errorMsg = 'Firebase App Credential त्रुटि (App Check / Domain verification failed).';
+        errorMsg = 'Firebase App Credential à¤¤à¥à¤°à¥à¤Ÿà¤¿ (App Check / Domain verification failed).';
       } else if (err?.code === 'auth/too-many-requests') {
-        errorMsg = 'इस मोबाइल नंबर पर अत्यधिक प्रयास किए गए हैं। कृपया थोड़ी देर बाद प्रयास करें।';
+        errorMsg = 'à¤‡à¤¸ à¤®à¥‹à¤¬à¤¾à¤‡à¤² à¤¨à¤‚à¤¬à¤° à¤ªà¤° à¤…à¤¤à¥à¤¯à¤§à¤¿à¤• à¤ªà¥à¤°à¤¯à¤¾à¤¸ à¤•à¤¿à¤ à¤—à¤ à¤¹à¥ˆà¤‚à¥¤ à¤•à¥ƒà¤ªà¤¯à¤¾ à¤¥à¥‹à¤¡à¤¼à¥€ à¤¦à¥‡à¤° à¤¬à¤¾à¤¦ à¤ªà¥à¤°à¤¯à¤¾à¤¸ à¤•à¤°à¥‡à¤‚à¥¤';
       } else if (err?.message) {
-        errorMsg = `Firebase त्रुटि (${err.code || 'error'}): ${err.message}`;
+        errorMsg = `Firebase à¤¤à¥à¤°à¥à¤Ÿà¤¿ (${err.code || 'error'}): ${err.message}`;
       }
 
       setSendError(errorMsg);
@@ -77,10 +72,10 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
     }
   };
 
-  const handleVerifyOtp = async (e: React.FormEvent) => {
+  const handleVerifyOtp = async (e) => {
     e.preventDefault();
     if (!otpInput || otpInput.trim().length < 6) {
-      setOtpError('कृपया आपके मोबाइल पर प्राप्त 6 अंकों का SMS OTP दर्ज करें।');
+      setOtpError('à¤•à¥ƒà¤ªà¤¯à¤¾ à¤†à¤ªà¤•à¥‡ à¤®à¥‹à¤¬à¤¾à¤‡à¤² à¤ªà¤° à¤ªà¥à¤°à¤¾à¤ªà¥à¤¤ 6 à¤…à¤‚à¤•à¥‹à¤‚ à¤•à¤¾ SMS OTP à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚à¥¤');
       return;
     }
 
@@ -92,11 +87,11 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
         await confirmationResult.confirm(otpInput.trim());
         setStep('success');
       } else {
-        setOtpError('सत्यापन सत्र समाप्त हो गया है। कृपया पुनः प्रयास करें।');
+        setOtpError('à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¨ à¤¸à¤¤à¥à¤° à¤¸à¤®à¤¾à¤ªà¥à¤¤ à¤¹à¥‹ à¤—à¤¯à¤¾ à¤¹à¥ˆà¥¤ à¤•à¥ƒà¤ªà¤¯à¤¾ à¤ªà¥à¤¨à¤ƒ à¤ªà¥à¤°à¤¯à¤¾à¤¸ à¤•à¤°à¥‡à¤‚à¥¤');
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error("OTP verification error:", err);
-      setOtpError('गलत OTP! कृपया आपके मोबाइल पर प्राप्त 6 अंकों का SMS OTP दर्ज करें।');
+      setOtpError('à¤—à¤²à¤¤ OTP! à¤•à¥ƒà¤ªà¤¯à¤¾ à¤†à¤ªà¤•à¥‡ à¤®à¥‹à¤¬à¤¾à¤‡à¤² à¤ªà¤° à¤ªà¥à¤°à¤¾à¤ªà¥à¤¤ 6 à¤…à¤‚à¤•à¥‹à¤‚ à¤•à¤¾ SMS OTP à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚à¥¤');
     } finally {
       setLoading(false);
     }
@@ -130,7 +125,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
             <div className="flex items-center gap-2">
               {step === 'otp' ? <KeyRound className="w-5 h-5 text-amber-400" /> : <ShoppingBag className="w-5 h-5 text-amber-400" />}
               <h3 className="font-serif text-lg font-bold text-white">
-                {step === 'otp' ? 'OTP सत्यापन' : 'कैश ऑन डिलीवरी ऑर्डर फॉर्म'}
+                {step === 'otp' ? 'OTP à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¨' : 'à¤•à¥ˆà¤¶ à¤‘à¤¨ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤‘à¤°à¥à¤¡à¤° à¤«à¥‰à¤°à¥à¤®'}
               </h3>
             </div>
             <button
@@ -155,8 +150,8 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                 <h4 className="font-extrabold text-sm text-slate-900">Horse Fire Tablets</h4>
                 <p className="text-xs text-slate-500">60 Tablets (1 Month Course)</p>
                 <div className="flex items-baseline gap-2 mt-1">
-                  <span className="font-bold text-red-600 text-base">₹1,499</span>
-                  <span className="text-xs text-slate-400 line-through">₹3,000</span>
+                  <span className="font-bold text-red-600 text-base">â‚¹1,499</span>
+                  <span className="text-xs text-slate-400 line-through">â‚¹3,000</span>
                 </div>
               </div>
             </div>
@@ -164,20 +159,20 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
             {step === 'form' && (
               <form onSubmit={handleSendOrder} className="space-y-4">
                 <h4 className="font-bold text-sm text-slate-900 border-b border-slate-100 pb-2">
-                  अपनी डिलीवरी जानकारी दर्ज करें:
+                  à¤…à¤ªà¤¨à¥€ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤œà¤¾à¤¨à¤•à¤¾à¤°à¥€ à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚:
                 </h4>
 
                 {/* Name */}
                 <div>
                   <label className="block text-xs font-bold text-slate-900 mb-1">
-                    पूरा नाम (Full Name)
+                    à¤ªà¥‚à¤°à¤¾ à¤¨à¤¾à¤® (Full Name)
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="अपना पूरा नाम दर्ज करें"
+                    placeholder="à¤…à¤ªà¤¨à¤¾ à¤ªà¥‚à¤°à¤¾ à¤¨à¤¾à¤® à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚"
                     className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
                   />
                 </div>
@@ -185,11 +180,11 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                 {/* Number */}
                 <div>
                   <label className="block text-xs font-bold text-slate-900 mb-1">
-                    मोबाइल नंबर (Phone Number)
+                    à¤®à¥‹à¤¬à¤¾à¤‡à¤² à¤¨à¤‚à¤¬à¤° (Phone Number)
                   </label>
                   <div className="flex items-center gap-2">
                     <div className="flex items-center gap-1.5 px-3 py-3 rounded-xl border border-slate-300 bg-slate-100 text-slate-800 text-sm font-bold shrink-0 select-none shadow-sm">
-                      <span className="text-base">🇮🇳</span>
+                      <span className="text-base">ðŸ‡®ðŸ‡³</span>
                       <span>+91</span>
                     </div>
                     <input
@@ -202,7 +197,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                         setFormData({ ...formData, phone: val });
                         setSendError('');
                       }}
-                      placeholder="10 अंकों का नंबर दर्ज करें"
+                      placeholder="10 à¤…à¤‚à¤•à¥‹à¤‚ à¤•à¤¾ à¤¨à¤‚à¤¬à¤° à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚"
                       className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
                     />
                   </div>
@@ -211,7 +206,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                 {/* Age */}
                 <div>
                   <label className="block text-xs font-bold text-slate-900 mb-1">
-                    उम्र (Age)
+                    à¤‰à¤®à¥à¤° (Age)
                   </label>
                   <input
                     type="number"
@@ -220,7 +215,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                     max="99"
                     value={formData.age}
                     onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-                    placeholder="अपनी उम्र दर्ज करें"
+                    placeholder="à¤…à¤ªà¤¨à¥€ à¤‰à¤®à¥à¤° à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚"
                     className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
                   />
                 </div>
@@ -228,14 +223,14 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                 {/* Address */}
                 <div>
                   <label className="block text-xs font-bold text-slate-900 mb-1">
-                    पूरा पता (Address)
+                    à¤ªà¥‚à¤°à¤¾ à¤ªà¤¤à¤¾ (Address)
                   </label>
                   <textarea
                     rows={3}
                     required
                     value={formData.address}
                     onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    placeholder="मकान नंबर, गली/गाँव, शहर, राज्य"
+                    placeholder="à¤®à¤•à¤¾à¤¨ à¤¨à¤‚à¤¬à¤°, à¤—à¤²à¥€/à¤—à¤¾à¤à¤µ, à¤¶à¤¹à¤°, à¤°à¤¾à¤œà¥à¤¯"
                     className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
                   />
                 </div>
@@ -243,7 +238,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                 {/* Pincode */}
                 <div>
                   <label className="block text-xs font-bold text-slate-900 mb-1">
-                    पिन कोड (PIN Code)
+                    à¤ªà¤¿à¤¨ à¤•à¥‹à¤¡ (PIN Code)
                   </label>
                   <input
                     type="text"
@@ -251,7 +246,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                     maxLength={6}
                     value={formData.pincode}
                     onChange={(e) => setFormData({ ...formData, pincode: e.target.value })}
-                    placeholder="6 अंकों का PIN code"
+                    placeholder="6 à¤…à¤‚à¤•à¥‹à¤‚ à¤•à¤¾ PIN code"
                     className="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white"
                   />
                 </div>
@@ -270,7 +265,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                     {loading ? (
                       <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        <span>OTP भेजा जा रहा है...</span>
+                        <span>OTP à¤­à¥‡à¤œà¤¾ à¤œà¤¾ à¤°à¤¹à¤¾ à¤¹à¥ˆ...</span>
                       </>
                     ) : (
                       <span>SEND ORDER</span>
@@ -287,7 +282,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                 {/* OTP Input */}
                 <div>
                   <label className="block text-xs font-bold text-slate-900 mb-1.5 text-center">
-                    6 अंकों का SMS OTP दर्ज करें (Enter 6-Digit SMS OTP)
+                    6 à¤…à¤‚à¤•à¥‹à¤‚ à¤•à¤¾ SMS OTP à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚ (Enter 6-Digit SMS OTP)
                   </label>
                   <input
                     type="text"
@@ -298,7 +293,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                       setOtpInput(e.target.value);
                       setOtpError('');
                     }}
-                    placeholder="••••••"
+                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢"
                     className="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-300 text-center font-bold text-2xl tracking-[0.4em] text-slate-900 placeholder-slate-300 focus:outline-none focus:border-red-600 bg-slate-50"
                   />
                   {otpError && (
@@ -316,10 +311,10 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                     {loading ? (
                       <>
                         <Loader2 className="w-5 h-5 animate-spin" />
-                        <span>सत्यापित किया जा रहा है...</span>
+                        <span>à¤¸à¤¤à¥à¤¯à¤¾à¤ªà¤¿à¤¤ à¤•à¤¿à¤¯à¤¾ à¤œà¤¾ à¤°à¤¹à¤¾ à¤¹à¥ˆ...</span>
                       </>
                     ) : (
-                      <span>वेरीफाई और ऑर्डर कन्फर्म करें (Verify & Confirm)</span>
+                      <span>à¤µà¥‡à¤°à¥€à¤«à¤¾à¤ˆ à¤”à¤° à¤‘à¤°à¥à¤¡à¤° à¤•à¤¨à¥à¤«à¤°à¥à¤® à¤•à¤°à¥‡à¤‚ (Verify & Confirm)</span>
                     )}
                   </button>
 
@@ -329,7 +324,7 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                     className="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 py-2"
                   >
                     <ArrowLeft className="w-4 h-4" />
-                    <span>फॉर्म वापस बदलें (Edit Form / Phone)</span>
+                    <span>à¤«à¥‰à¤°à¥à¤® à¤µà¤¾à¤ªà¤¸ à¤¬à¤¦à¤²à¥‡à¤‚ (Edit Form / Phone)</span>
                   </button>
                 </div>
 
@@ -343,21 +338,21 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
                   <CheckCircle2 className="w-10 h-10" />
                 </div>
                 <h3 className="font-serif text-2xl font-bold text-slate-900">
-                  ऑर्डर सफलतापूर्वक दर्ज हो गया!
+                  à¤‘à¤°à¥à¤¡à¤° à¤¸à¤«à¤²à¤¤à¤¾à¤ªà¥‚à¤°à¥à¤µà¤• à¤¦à¤°à¥à¤œ à¤¹à¥‹ à¤—à¤¯à¤¾!
                 </h3>
                 <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-600 space-y-1 text-left max-w-sm mx-auto">
-                  <p><strong>नाम:</strong> {formData.name}</p>
-                  <p><strong>नंबर:</strong> +91 {formData.phone.slice(-10)} <span className="text-emerald-600 font-bold ml-1">✓ Real SMS OTP Verified</span></p>
-                  <p><strong>पता:</strong> {formData.address}, {formData.pincode}</p>
+                  <p><strong>à¤¨à¤¾à¤®:</strong> {formData.name}</p>
+                  <p><strong>à¤¨à¤‚à¤¬à¤°:</strong> +91 {formData.phone.slice(-10)} <span className="text-emerald-600 font-bold ml-1">âœ“ Real SMS OTP Verified</span></p>
+                  <p><strong>à¤ªà¤¤à¤¾:</strong> {formData.address}, {formData.pincode}</p>
                 </div>
                 <p className="text-xs text-slate-600">
-                  हमारी टीम जल्द ही आपकी डिलीवरी की पुष्टि के लिए संपर्क करेगी।
+                  à¤¹à¤®à¤¾à¤°à¥€ à¤Ÿà¥€à¤® à¤œà¤²à¥à¤¦ à¤¹à¥€ à¤†à¤ªà¤•à¥€ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€ à¤•à¥€ à¤ªà¥à¤·à¥à¤Ÿà¤¿ à¤•à¥‡ à¤²à¤¿à¤ à¤¸à¤‚à¤ªà¤°à¥à¤• à¤•à¤°à¥‡à¤—à¥€à¥¤
                 </p>
                 <button
                   onClick={handleReset}
                   className="bg-slate-900 text-white font-bold text-xs px-6 py-2.5 rounded-full"
                 >
-                  नया ऑर्डर दर्ज करें
+                  à¤¨à¤¯à¤¾ à¤‘à¤°à¥à¤¡à¤° à¤¦à¤°à¥à¤œ à¤•à¤°à¥‡à¤‚
                 </button>
               </div>
             )}
@@ -367,10 +362,10 @@ export const OrderDrawer: React.FC<OrderDrawerProps> = ({ isOpen, onClose }) => 
           {/* Drawer Footer Trust Badges */}
           <div className="bg-slate-50 border-t border-slate-200 p-4 text-center text-xs text-slate-500 flex items-center justify-around">
             <span className="flex items-center gap-1 font-semibold">
-              <Truck className="w-4 h-4 text-emerald-600" /> फ्री डिलीवरी
+              <Truck className="w-4 h-4 text-emerald-600" /> à¤«à¥à¤°à¥€ à¤¡à¤¿à¤²à¥€à¤µà¤°à¥€
             </span>
             <span className="flex items-center gap-1 font-semibold">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" /> 100% सेफ COD
+              <ShieldCheck className="w-4 h-4 text-emerald-600" /> 100% à¤¸à¥‡à¤« COD
             </span>
           </div>
 

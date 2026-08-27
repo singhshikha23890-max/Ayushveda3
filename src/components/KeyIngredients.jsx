@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 const ingredients = [
   {
@@ -28,7 +28,7 @@ const ingredients = [
   },
 ];
 
-export const KeyIngredients: React.FC = () => {
+export const KeyIngredients = () => {
   return (
     <section className="py-16 bg-white border-b border-slate-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

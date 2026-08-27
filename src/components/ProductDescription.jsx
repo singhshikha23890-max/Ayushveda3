@@ -1,6 +1,6 @@
-import React from 'react';
+﻿import React from 'react';
 
-export const ProductDescription: React.FC = () => {
+export const ProductDescription = () => {
   return (
     <section className="bg-black text-white py-20 relative overflow-hidden border-b border-slate-900">
       
@@ -41,13 +41,13 @@ export const ProductDescription: React.FC = () => {
 
             <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs font-semibold text-amber-400">
               <span className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
-                ✓ 100% Ayurvedic Formula
+                âœ“ 100% Ayurvedic Formula
               </span>
               <span className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
-                ✓ FSSAI & GMP Certified
+                âœ“ FSSAI & GMP Certified
               </span>
               <span className="flex items-center gap-1.5 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
-                ✓ Safe for Daily Use
+                âœ“ Safe for Daily Use
               </span>
             </div>
           </div>

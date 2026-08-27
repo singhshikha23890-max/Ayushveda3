@@ -1,6 +1,6 @@
-import React from 'react';
+﻿import React from 'react';
 
-export const BenefitsSection: React.FC = () => {
+export const BenefitsSection = () => {
   return (
     <section className="bg-black text-white py-12 sm:py-16 relative overflow-hidden border-b border-slate-900 w-full max-w-full">
       
