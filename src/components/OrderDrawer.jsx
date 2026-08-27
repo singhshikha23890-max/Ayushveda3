@@ -36,11 +36,18 @@ export const OrderDrawer = ({ isOpen, onClose }) => {
     setOtpError('');
 
     try {
-      if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container-drawer', {
-          size: 'invisible',
-        });
+      if (window.recaptchaVerifier) {
+        try {
+          window.recaptchaVerifier.clear();
+        } catch (e) {}
+        window.recaptchaVerifier = undefined;
       }
+      const el = document.getElementById('recaptcha-container-drawer');
+      if (el) el.innerHTML = '';
+
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container-drawer', {
+        size: 'invisible',
+      });
 
       const formattedPhone = cleanPhone.startsWith('91') && cleanPhone.length === 12 ? `+${cleanPhone}` : `+91${cleanPhone.slice(-10)}`;
       const result = await signInWithPhoneNumber(auth, formattedPhone, window.recaptchaVerifier);
