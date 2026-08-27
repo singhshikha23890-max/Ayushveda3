@@ -60,3 +60,8 @@
 .animate-fadeIn {
   animation: fadeIn 0.4s ease-out forwards;
 }
+
+/* Hide Google reCAPTCHA badge cleanly */
+.grecaptcha-badge {
+  visibility: hidden !important;
+}
