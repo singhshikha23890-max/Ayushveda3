@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
 
 const reelVideos = [
@@ -32,9 +32,9 @@ const reelVideos = [
     title: 'Horse Fire YouTube Short 2',
     duration: '0:35',
     type: 'youtube',
-    videoUrl: 'https://www.youtube.com/embed/2_V463Qy2r8?autoplay=1&mute=1&loop=1&playlist=2_V463Qy2r8',
-    youtubeId: '2_V463Qy2r8',
-    thumb: 'https://img.youtube.com/vi/2_V463Qy2r8/hqdefault.jpg',
+    videoUrl: 'https://www.youtube.com/embed/qc2HOgPCMh8?autoplay=1&mute=1&loop=1&playlist=qc2HOgPCMh8',
+    youtubeId: 'qc2HOgPCMh8',
+    thumb: 'https://img.youtube.com/vi/qc2HOgPCMh8/hqdefault.jpg',
   },
   {
     id: 5,
