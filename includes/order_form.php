@@ -1,9 +1,6 @@
 ﻿<section id="order-form-section" class="py-16 bg-[#f8f9fa] border-b border-slate-200 scroll-mt-6">
   <div class="max-w-xl mx-auto px-4 sm:px-6">
     
-    <!-- Invisible Recaptcha Container for Firebase -->
-    <div id="recaptcha-container"></div>
-
     <div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xl relative">
       
       <!-- Header -->
@@ -19,7 +16,7 @@
         </p>
       </div>
 
-      <!-- Step 1: Order Form -->
+      <!-- Order Form -->
       <form id="cod-order-form" onsubmit="handleSendOrderSubmit(event)" class="space-y-4">
         
         <!-- Name -->
@@ -30,7 +27,7 @@
           <input type="text" id="order-name" required placeholder="अपना पूरा नाम दर्ज करें" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white">
         </div>
 
-        <!-- Number with +91 Country Code -->
+        <!-- 10-Digit Mobile Number with +91 Country Code -->
         <div>
           <label class="block text-xs font-bold text-slate-900 mb-1">
             मोबाइल नंबर (Phone Number)
@@ -40,7 +37,7 @@
               <span class="text-base">🇮🇳</span>
               <span>+91</span>
             </div>
-            <input type="tel" id="order-phone" required maxlength="10" placeholder="10 अंकों का नंबर दर्ज करें" oninput="this.value = this.value.replace(/\D/g, '')" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white">
+            <input type="tel" id="order-phone" required maxlength="10" minlength="10" pattern="[0-9]{10}" placeholder="10 अंकों का नंबर दर्ज करें" oninput="this.value = this.value.replace(/\D/g, '')" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white">
           </div>
         </div>
 
@@ -65,7 +62,7 @@
           <label class="block text-xs font-bold text-slate-900 mb-1">
             पिन कोड (PIN Code)
           </label>
-          <input type="text" id="order-pincode" required maxlength="6" placeholder="6 अंकों का PIN code" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white">
+          <input type="text" id="order-pincode" required maxlength="6" minlength="6" placeholder="6 अंकों का PIN code" class="w-full px-4 py-3 rounded-xl border border-slate-300 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-600 bg-white">
         </div>
 
         <p id="order-send-error" class="text-xs font-bold text-red-600 text-center pt-1 hidden"></p>
@@ -79,29 +76,7 @@
 
       </form>
 
-      <!-- Step 2: OTP Verification Form (Hidden by default) -->
-      <form id="cod-otp-form" onsubmit="handleVerifyOtpSubmit(event)" class="space-y-5 hidden">
-        <div>
-          <label class="block text-xs font-bold text-slate-900 mb-1.5 text-center">
-            6 अंकों का SMS OTP दर्ज करें (Enter 6-Digit SMS OTP)
-          </label>
-          <input type="text" id="otp-input-field" required maxlength="6" placeholder="••••••" oninput="this.value = this.value.replace(/\D/g, '')" class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-300 text-center font-bold text-2xl tracking-[0.4em] text-slate-900 placeholder-slate-300 focus:outline-none focus:border-red-600 bg-slate-50">
-          <p id="otp-verify-error" class="text-xs font-bold text-red-600 text-center mt-2 hidden"></p>
-        </div>
-
-        <div class="space-y-3 pt-2">
-          <button type="submit" id="otp-verify-btn" class="w-full bg-[#cc0000] hover:bg-red-700 disabled:opacity-60 text-white font-black text-base py-4 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-2">
-            <span>वेरीफाई और ऑर्डर कन्फर्म करें (Verify & Confirm)</span>
-          </button>
-
-          <button type="button" onclick="handleEditFormStep()" class="w-full flex items-center justify-center gap-1.5 text-xs font-bold text-slate-600 hover:text-slate-900 py-2">
-            <i data-lucide="arrow-left" class="w-4 h-4"></i>
-            <span>फॉर्म वापस बदलें (Edit Form / Phone)</span>
-          </button>
-        </div>
-      </form>
-
-      <!-- Step 3: Success Confirmation Screen (Hidden by default) -->
+      <!-- Success Confirmation Screen (Hidden by default) -->
       <div id="cod-success-screen" class="text-center py-10 space-y-4 hidden">
         <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center mx-auto shadow">
           <i data-lucide="check-circle-2" class="w-10 h-10"></i>
@@ -111,7 +86,7 @@
         </h3>
         <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs text-slate-600 space-y-1 text-left max-w-sm mx-auto">
           <p><strong>नाम:</strong> <span id="summary-name"></span></p>
-          <p><strong>नंबर:</strong> +91 <span id="summary-phone"></span> <span class="text-emerald-600 font-bold ml-1">✓ Real SMS OTP Verified</span></p>
+          <p><strong>नंबर:</strong> +91 <span id="summary-phone"></span> <span class="text-emerald-600 font-bold ml-1">✓ COD Order Confirmed</span></p>
           <p><strong>पता:</strong> <span id="summary-address"></span>, <span id="summary-pincode"></span></p>
         </div>
         <p class="text-xs text-slate-600">

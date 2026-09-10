@@ -1,4 +1,4 @@
-﻿    <!-- Floating Scroll To Top Button -->
+    <!-- Floating Scroll To Top Button -->
     <button onclick="scrollToTop()" class="fixed bottom-5 right-5 z-50 bg-[#0070df] text-white p-3 rounded-lg shadow-xl hover:bg-blue-700 transition-all" title="Scroll to Top">
       <i data-lucide="arrow-up" class="w-5 h-5"></i>
     </button>
@@ -24,10 +24,6 @@
         </p>
       </div>
     </footer>
-
-    <!-- Firebase SDK Compat / Modular CDN -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
     <!-- Client-Side App JS -->
     <script src="/assets/js/app.js"></script>
