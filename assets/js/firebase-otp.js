@@ -1,5 +1,5 @@
-﻿// Direct COD Order Submission & Google Sheets Integration
-const GOOGLE_SHEET_WEBHOOK_URL = ""; // Paste your Google Apps Script Web App URL here
+// Direct COD Order Submission & Google Sheets Integration
+const GOOGLE_SHEET_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbyOQOci-xBoeXUl5MKsOGxzj1pD2_6fUd797u_W62EDwbOQF4wWANFOlZhfP0lteYQ/exec"; // Paste your Google Apps Script Web App URL here
 
 async function handleSendOrderSubmit(e) {
   e.preventDefault();

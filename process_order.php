@@ -1,8 +1,8 @@
-﻿<?php
+<?php
 header("Content-Type: application/json; charset=UTF-8");
 
 // Optional: Paste your Google Apps Script Web App URL here to sync orders directly into your Google Sheet
-$googleSheetScriptUrl = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+$googleSheetScriptUrl = "https://script.google.com/macros/s/AKfycbyOQOci-xBoeXUl5MKsOGxzj1pD2_6fUd797u_W62EDwbOQF4wWANFOlZhfP0lteYQ/exec";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $name = isset($_POST["name"]) ? trim($_POST["name"]) : "";
