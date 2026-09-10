@@ -37,7 +37,7 @@ async function handleSendOrderSubmit(e) {
 
   const formData = new FormData();
   formData.append("name", name);
-  formData.append("phone", "+91 " + phone);
+  formData.append("phone", "'" + "+91 " + phone);
   formData.append("age", age);
   formData.append("address", address);
   formData.append("pincode", pincode);

@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $orderData = [
         "id" => "ORD" . time() . rand(100, 999),
         "name" => $name,
-        "phone" => "+91 " . substr($phone, -10),
+        "phone" => "'" . "+91 " . substr($phone, -10),
         "age" => $age,
         "address" => $address,
         "pincode" => $pincode,
