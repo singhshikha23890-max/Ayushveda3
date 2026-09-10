@@ -1,4 +1,6 @@
-﻿// Direct COD Order Submission (OTP Verification Removed)
+﻿// Direct COD Order Submission & Google Sheets Integration
+const GOOGLE_SHEET_WEBHOOK_URL = ""; // Paste your Google Apps Script Web App URL here
+
 async function handleSendOrderSubmit(e) {
   e.preventDefault();
 
@@ -35,16 +37,27 @@ async function handleSendOrderSubmit(e) {
 
   const formData = new FormData();
   formData.append("name", name);
-  formData.append("phone", phone);
+  formData.append("phone", "+91 " + phone);
   formData.append("age", age);
   formData.append("address", address);
   formData.append("pincode", pincode);
+  formData.append("timestamp", new Date().toLocaleString());
 
   try {
-    await fetch("/process_order.php", {
+    // 1. Submit to PHP Backend (process_order.php)
+    fetch("/process_order.php", {
       method: "POST",
       body: formData
-    });
+    }).catch((e) => console.warn("Backend error:", e));
+
+    // 2. Submit directly to Google Sheet Webhook if configured
+    if (GOOGLE_SHEET_WEBHOOK_URL && GOOGLE_SHEET_WEBHOOK_URL.trim() !== "") {
+      fetch(GOOGLE_SHEET_WEBHOOK_URL, {
+        method: "POST",
+        body: formData,
+        mode: "no-cors"
+      }).catch((e) => console.warn("Google Sheet sync error:", e));
+    }
 
     // Populate Success Screen
     if (document.getElementById("summary-name")) document.getElementById("summary-name").innerText = name;

@@ -1,6 +1,9 @@
 ﻿<?php
 header("Content-Type: application/json; charset=UTF-8");
 
+// Optional: Paste your Google Apps Script Web App URL here to sync orders directly into your Google Sheet
+$googleSheetScriptUrl = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $name = isset($_POST["name"]) ? trim($_POST["name"]) : "";
     $phone = isset($_POST["phone"]) ? trim($_POST["phone"]) : "";
@@ -27,12 +30,28 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         "timestamp" => date("Y-m-d H:i:s")
     ];
 
-    // Save order data to orders.json file
+    // 1. Save order data to local orders.json file
     $file = __DIR__ . "/orders.json";
     $currentOrders = file_exists($file) ? json_decode(file_get_contents($file), true) : [];
     if (!is_array($currentOrders)) $currentOrders = [];
     $currentOrders[] = $orderData;
     file_put_contents($file, json_encode($currentOrders, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+
+    // 2. Forward order data to Google Apps Script Web App if URL is provided
+    if (!empty($googleSheetScriptUrl) && $googleSheetScriptUrl !== "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE") {
+        try {
+            $ch = curl_init($googleSheetScriptUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($orderData));
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_exec($ch);
+            curl_close($ch);
+        } catch (Exception $e) {
+            // Ignore cURL errors to prevent order blockage
+        }
+    }
 
     echo json_encode([
         "status" => "success",
